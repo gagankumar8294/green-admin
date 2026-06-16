@@ -1,0 +1,122 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Outfit:wght@400;500;600;700;800&family=Cormorant:ital,wght@0,400;0,600;1,400&family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=Source+Sans+3:ital,wght@0,300;0,400;0,600;1,300&display=swap');
+
+/* ============================================================
+   DESIGN TOKENS — All CSS variables used across components
+   ============================================================ */
+:root {
+  /* Core Colors */
+  --green-primary:   #10b981;
+  --green-dark:      #059669;
+  --green-glow:      rgba(16, 185, 129, 0.25);
+  --green-subtle:    rgba(16, 185, 129, 0.1);
+  --red-primary:     #ef4444;
+  --red-subtle:      rgba(239, 68, 68, 0.12);
+  --blue-primary:    #3b82f6;
+
+  /* Background layers */
+  --bg:              #080d14;
+  --sidebar-bg:      #0d1117;
+  --card-bg:         #111827;
+  --hover-bg:        #1a2332;
+  --input-bg:        #0d1117;
+
+  /* Borders */
+  --card-border:     rgba(255, 255, 255, 0.07);
+  --input-border:    rgba(255, 255, 255, 0.12);
+  --border-color:    rgba(255, 255, 255, 0.08);
+
+  /* Text — these aliases MUST all resolve for every component */
+  --text:            #e5e7eb;
+  --text-color:      #e5e7eb;   /* alias used in Comments & Analytics */
+  --text-muted:      #9ca3af;
+  --text-faint:      #6b7280;
+
+  /* Shadows */
+  --shadow-color:    rgba(0, 0, 0, 0.4);
+  --shadow-md:       0 4px 20px rgba(0, 0, 0, 0.4);
+  --shadow-lg:       0 8px 32px rgba(0, 0, 0, 0.5);
+
+  /* Interactive States */
+  --active-bg:       #10b981;
+  --active-border:   #10b981;
+
+  /* Theme button alias used in some components */
+  --theme-add-btn:        #10b981;
+  --theme-add-btn-text:   #ffffff;
+}
+
+/* ============================================================
+   GLOBAL RESETS
+   ============================================================ */
+*, *::before, *::after {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
+  font-size: 16px;
+}
+
+body {
+  background-color: var(--bg);
+  color: var(--text);
+  font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  min-height: 100vh;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
+}
+
+/* ============================================================
+   SCROLLBARS
+   ============================================================ */
+::-webkit-scrollbar          { width: 6px; height: 6px; }
+::-webkit-scrollbar-track    { background: var(--bg); }
+::-webkit-scrollbar-thumb    { background: #1f2937; border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: #374151; }
+
+/* ============================================================
+   FORM ELEMENT RESETS — prevent browser defaults fighting vars
+   ============================================================ */
+input, select, textarea, button {
+  font-family: inherit;
+  font-size: inherit;
+}
+
+/* Fix browser autofill yellow overlay */
+input:-webkit-autofill,
+input:-webkit-autofill:hover,
+input:-webkit-autofill:focus {
+  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-text-fill-color: var(--text) !important;
+  caret-color: var(--text);
+  transition: background-color 5000s ease-in-out 0s;
+}
+
+/* Global placeholder fix — these must be visible on dark bg */
+::placeholder {
+  color: var(--text-faint);
+  opacity: 1;
+}
+
+/* Make <select> options readable on dark bg */
+option {
+  background: var(--card-bg);
+  color: var(--text);
+}
+
+/* ============================================================
+   SELECTION
+   ============================================================ */
+::selection {
+  background: var(--green-glow);
+  color: #fff;
+}
+
+/* ============================================================
+   UTILITY — page-level transitions
+   ============================================================ */
+a { color: inherit; text-decoration: none; }
+img { display: block; max-width: 100%; }

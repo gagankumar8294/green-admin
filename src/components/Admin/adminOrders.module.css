@@ -1,0 +1,362 @@
+/* ============================================================
+   Admin Orders Page — Premium Dark Theme
+   ============================================================ */
+
+.page {
+  padding: 0;
+  background: transparent;
+  color: var(--text);
+}
+
+.title {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: var(--text);
+  margin-bottom: 24px;
+  letter-spacing: -0.3px;
+}
+
+/* ─── Controls Row ─── */
+.controlsRow {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 14px;
+  margin-bottom: 24px;
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  padding: 16px;
+  border-radius: 14px;
+  box-shadow: var(--shadow-md);
+}
+
+.searchBar {
+  flex: 1;
+  min-width: 200px;
+}
+
+.searchInput {
+  width: 100%;
+  padding: 11px 16px;
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 14px;
+  outline: none;
+  transition: border-color 0.25s, box-shadow 0.25s;
+}
+
+.searchInput::placeholder {
+  color: var(--text-faint);
+}
+
+.searchInput:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--green-glow);
+}
+
+.filterGroup {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+.filterControl {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.filterControl label {
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  font-weight: 700;
+}
+
+.selectInput {
+  padding: 10px 14px;
+  border-radius: 10px;
+  border: 1px solid var(--input-border);
+  background: var(--input-bg);
+  color: var(--text);
+  font-size: 13px;
+  outline: none;
+  cursor: pointer;
+  min-width: 160px;
+  transition: border-color 0.25s, box-shadow 0.25s;
+  appearance: auto;
+}
+
+.selectInput:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--green-glow);
+}
+
+/* ─── Empty State ─── */
+.noOrders {
+  text-align: center;
+  padding: 56px 20px;
+  color: var(--text-muted);
+  background: var(--card-bg);
+  border: 1px dashed var(--card-border);
+  border-radius: 16px;
+  font-size: 15px;
+}
+
+/* ─── Order Card ─── */
+.orderCard {
+  background: var(--card-bg);
+  border: 1px solid var(--card-border);
+  border-radius: 16px;
+  padding: 20px;
+  margin-bottom: 18px;
+  box-shadow: var(--shadow-md);
+  transition: box-shadow 0.25s, border-color 0.25s;
+}
+
+.orderCard:hover {
+  box-shadow: var(--shadow-lg);
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+/* ─── Card Header ─── */
+.header {
+  display: flex;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px;
+  padding-bottom: 14px;
+  border-bottom: 1px solid var(--border-color);
+  margin-bottom: 14px;
+}
+
+.header h3 {
+  font-size: 0.88rem;
+  font-weight: 700;
+  color: var(--text);
+  margin: 0 0 4px;
+  word-break: break-all;
+  font-family: monospace;
+}
+
+.time {
+  font-size: 12px;
+  color: var(--text-faint);
+  margin: 2px 0;
+}
+
+/* ─── Status Box ─── */
+.statusBox {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  align-items: flex-end;
+}
+
+.paymentStatus {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+/* Dark-friendly status badges */
+.paid {
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.cancelled {
+  background: rgba(239, 68, 68, 0.15);
+  color: #f87171;
+  border: 1px solid rgba(239, 68, 68, 0.25);
+}
+
+.pending {
+  background: rgba(245, 158, 11, 0.15);
+  color: #fbbf24;
+  border: 1px solid rgba(245, 158, 11, 0.25);
+}
+
+.orderStatus {
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+/* ─── Sections ─── */
+.section {
+  margin-top: 14px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+}
+
+.section:first-of-type {
+  margin-top: 0;
+  padding-top: 0;
+  border-top: none;
+}
+
+.section h4 {
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.07em;
+  color: var(--text-muted);
+  margin-bottom: 10px;
+}
+
+.section p {
+  font-size: 13px;
+  color: var(--text);
+  margin: 3px 0;
+  line-height: 1.5;
+}
+
+/* ─── Items ─── */
+.items {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.itemRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: var(--hover-bg);
+  border: 1px solid var(--border-color);
+  padding: 10px 12px;
+  border-radius: 10px;
+  transition: border-color 0.2s;
+}
+
+.itemRow:hover {
+  border-color: rgba(255, 255, 255, 0.12);
+}
+
+.itemRow img {
+  width: 56px;
+  height: 56px;
+  object-fit: cover;
+  border-radius: 8px;
+  border: 1px solid var(--card-border);
+  flex-shrink: 0;
+}
+
+.itemInfo {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.itemInfo strong {
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--text);
+}
+
+.itemInfo span {
+  font-size: 12px;
+  color: var(--text-muted);
+}
+
+.itemTotal {
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--green-primary);
+  white-space: nowrap;
+}
+
+/* ─── Total ─── */
+.total {
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border-color);
+  font-size: 1.05rem;
+  font-weight: 800;
+  text-align: right;
+  color: var(--green-primary);
+}
+
+/* ─── Status Action Buttons ─── */
+.actions {
+  margin-top: 16px;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.actions button {
+  padding: 7px 14px;
+  border-radius: 20px;
+  border: 1px solid var(--border-color);
+  background: var(--hover-bg);
+  color: var(--text-muted);
+  font-size: 12px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  letter-spacing: 0.04em;
+}
+
+.actions button:hover {
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--text);
+  border-color: rgba(255, 255, 255, 0.15);
+}
+
+.active {
+  background: linear-gradient(135deg, rgba(16,185,129,0.2), rgba(16,185,129,0.1)) !important;
+  color: #10b981 !important;
+  border-color: rgba(16, 185, 129, 0.35) !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+/* ─── Mobile ─── */
+@media (max-width: 768px) {
+  .controlsRow {
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .filterGroup {
+    flex-direction: column;
+    gap: 10px;
+  }
+
+  .filterControl { width: 100%; }
+  .selectInput { min-width: 100%; }
+
+  .header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .statusBox {
+    align-items: flex-start;
+    flex-direction: row;
+    flex-wrap: wrap;
+  }
+
+  .itemRow {
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .total {
+    text-align: left;
+  }
+
+  .actions {
+    gap: 6px;
+  }
+}
