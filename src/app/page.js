@@ -34,6 +34,7 @@ export default function AdminPortal() {
   const [authError,    setAuthError]    = useState("");
   const [isClient,     setIsClient]     = useState(false);
   const [sidebarOpen,  setSidebarOpen]  = useState(false); // mobile drawer
+  const [tabLoading,   setTabLoading]   = useState(false);  // tab-switch shimmer
 
   /* ── init ── */
   useEffect(() => {
@@ -43,9 +44,15 @@ export default function AdminPortal() {
 
   /* ── close sidebar when user picks a tab on mobile ── */
   const handleTabClick = useCallback((id) => {
-    setActiveTab(id);
+    if (id === activeTab) return;          // same tab, skip
     setSidebarOpen(false);
-  }, []);
+    setTabLoading(true);
+    // brief loading shimmer, then swap component
+    setTimeout(() => {
+      setActiveTab(id);
+      setTabLoading(false);
+    }, 280);
+  }, [activeTab]);
 
   /* ── close drawer on outside click ── */
   useEffect(() => {
@@ -384,7 +391,14 @@ export default function AdminPortal() {
 
         {/* Page body */}
         <div className="main-body">
-          <ActiveComponent />
+          {tabLoading ? (
+            <div className="tab-loading-wrap">
+              <div className="tab-spinner" />
+              <p className="tab-loading-msg">Loading {activeTabDef.label}...</p>
+            </div>
+          ) : (
+            <ActiveComponent />
+          )}
         </div>
       </main>
 
@@ -707,6 +721,39 @@ export default function AdminPortal() {
           .topbar-icon { font-size: 1.2rem; }
           .topbar-title { font-size: 0.95rem; }
           .main-body { padding: 16px 12px; }
+        }
+
+        /* ══════ TAB LOADING OVERLAY ══════ */
+        .tab-loading-wrap {
+          display: flex;
+          flex-direction: column;
+          align-items: center;
+          justify-content: center;
+          min-height: 60vh;
+          gap: 20px;
+          animation: fadeIn 0.15s ease;
+        }
+        @keyframes fadeIn {
+          from { opacity: 0; transform: translateY(8px); }
+          to   { opacity: 1; transform: translateY(0); }
+        }
+        .tab-spinner {
+          width: 44px;
+          height: 44px;
+          border: 3px solid rgba(16, 185, 129, 0.15);
+          border-top: 3px solid #10b981;
+          border-radius: 50%;
+          animation: tab-spin 0.75s linear infinite;
+        }
+        @keyframes tab-spin {
+          to { transform: rotate(360deg); }
+        }
+        .tab-loading-msg {
+          color: #6b7280;
+          font-size: 0.9rem;
+          font-weight: 500;
+          margin: 0;
+          letter-spacing: 0.02em;
         }
       `}</style>
     </div>

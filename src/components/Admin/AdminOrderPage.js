@@ -8,6 +8,7 @@ const STEPS = ["ORDERED", "SHIPPED", "PICKED", "ARRIVED", "DELIVERED"];
 
 export default function AdminOrdersPage() {
   const [orders, setOrders] = useState([]);
+  const [loading, setLoading] = useState(true);
   
   // Search, Filter, Sort States
   const [searchQuery, setSearchQuery] = useState("");
@@ -16,6 +17,7 @@ export default function AdminOrdersPage() {
   const [sortBy, setSortBy] = useState("date-newest");
 
   useEffect(() => {
+    setLoading(true);
     fetch(`${API_BASE_URL}/api/admin/orders`, {
       credentials: "include",
       headers: {
@@ -25,7 +27,8 @@ export default function AdminOrdersPage() {
       .then(res => res.json())
       .then(data => {
         if (data.success) setOrders(data.orders);
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   const updateStatus = async (orderId, status) => {
@@ -91,6 +94,33 @@ export default function AdminOrdersPage() {
 
     return result;
   }, [orders, searchQuery, paymentFilter, fulfillmentFilter, sortBy]);
+
+  if (loading) {
+    return (
+      <div className={styles.page}>
+        <h1 className={styles.title}>Admin – All Orders</h1>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "80px 20px",
+          gap: "20px",
+        }}>
+          <div style={{
+            width: "48px",
+            height: "48px",
+            border: "3px solid rgba(16,185,129,0.2)",
+            borderTop: "3px solid #10b981",
+            borderRadius: "50%",
+            animation: "orders-spin 0.8s linear infinite",
+          }} />
+          <p style={{ color: "#6b7280", fontSize: "0.95rem", margin: 0 }}>Fetching orders...</p>
+          <style>{`@keyframes orders-spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.page}>

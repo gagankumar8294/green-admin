@@ -7,6 +7,7 @@ import { API_BASE_URL } from "@/config/api";
 export default function Inventory() {
   const [products, setProducts] = useState([]);
   const [deletedProducts, setDeletedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState("active"); // "active" or "deleted"
   const [editId, setEditId] = useState(null);
 
@@ -74,8 +75,10 @@ export default function Inventory() {
   };
 
   useEffect(() => {
-    fetchProducts();
-    fetchDeletedProducts();
+    setLoading(true);
+    Promise.all([fetchProducts(), fetchDeletedProducts()]).finally(() =>
+      setLoading(false)
+    );
   }, []);
 
   // EDIT
@@ -351,6 +354,32 @@ export default function Inventory() {
   const handleNextPage = () => {
     if (currentPage < totalPages) setCurrentPage((prev) => prev + 1);
   };
+
+  if (loading) {
+    return (
+      <div className={styles.container}>
+        <div style={{
+          display: "flex",
+          flexDirection: "column",
+          alignItems: "center",
+          justifyContent: "center",
+          padding: "80px 20px",
+          gap: "20px",
+        }}>
+          <div style={{
+            width: "48px",
+            height: "48px",
+            border: "3px solid rgba(16,185,129,0.2)",
+            borderTop: "3px solid #10b981",
+            borderRadius: "50%",
+            animation: "inv-spin 0.8s linear infinite",
+          }} />
+          <p style={{ color: "#6b7280", fontSize: "0.95rem", margin: 0 }}>Loading inventory...</p>
+          <style>{`@keyframes inv-spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={styles.container}>
