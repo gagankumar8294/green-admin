@@ -9,20 +9,36 @@ import AdminCommentsDashboard from "@/components/Admin/AdminCommentsDashboard";
 import AdminShippingSettings from "@/components/Admin/AdminShippingSettings";
 import CheckoutAnalytics from "@/components/Admin/CheckoutAnalytics";
 import AdminAnalyticsPage from "./analytics/page";
+import {
+  FiShoppingBag, FiPlusCircle, FiGrid, FiBarChart2,
+  FiActivity, FiEdit3, FiMessageSquare, FiTruck,
+  FiMenu, FiX, FiLogOut, FiLeaf, FiUser,
+} from "react-icons/fi";
 
 /* ---------------------------------------------------------------
    TAB DEFINITIONS
 --------------------------------------------------------------- */
 const TABS = [
-  { id: "orders",    icon: "📋", label: "Orders",             component: AdminOrdersPage },
-  { id: "products",  icon: "🌱", label: "Add Products",       component: AddProductsForm },
-  { id: "inventory", icon: "📦", label: "Dense Inventory",    component: Inventory },
-  { id: "analytics", icon: "📊", label: "Checkout Analytics", component: CheckoutAnalytics },
-  { id: "sessions",  icon: "👣", label: "Session Journeys",   component: AdminAnalyticsPage },
-  { id: "blogs",     icon: "✍️", label: "Blogs",              component: AddBlogs },
-  { id: "comments",  icon: "💬", label: "Comments",           component: AdminCommentsDashboard },
-  { id: "shipping",  icon: "🚚", label: "Shipping Config",    component: AdminShippingSettings },
+  { id: "orders",    Icon: FiShoppingBag,  label: "Orders" },
+  { id: "products",  Icon: FiPlusCircle,   label: "Add Products" },
+  { id: "inventory", Icon: FiGrid,         label: "Inventory" },
+  { id: "analytics", Icon: FiBarChart2,    label: "Checkout Analytics" },
+  { id: "sessions",  Icon: FiActivity,     label: "Session Journeys" },
+  { id: "blogs",     Icon: FiEdit3,        label: "Blogs" },
+  { id: "comments",  Icon: FiMessageSquare,label: "Comments" },
+  { id: "shipping",  Icon: FiTruck,        label: "Shipping Config" },
 ];
+
+const TAB_COMPONENTS = {
+  orders:    AdminOrdersPage,
+  products:  AddProductsForm,
+  inventory: Inventory,
+  analytics: CheckoutAnalytics,
+  sessions:  AdminAnalyticsPage,
+  blogs:     AddBlogs,
+  comments:  AdminCommentsDashboard,
+  shipping:  AdminShippingSettings,
+};
 
 /* ---------------------------------------------------------------
    ROOT COMPONENT
@@ -33,7 +49,7 @@ export default function AdminPortal() {
   const [activeTab,    setActiveTab]    = useState("orders");
   const [authError,    setAuthError]    = useState("");
   const [isClient,     setIsClient]     = useState(false);
-  const [sidebarOpen,  setSidebarOpen]  = useState(false); // mobile drawer
+  const [sidebarOpen,  setSidebarOpen]  = useState(false);
   const [tabLoading,   setTabLoading]   = useState(false);  // tab-switch shimmer
 
   /* ── init ── */
@@ -96,7 +112,7 @@ export default function AdminPortal() {
         <div className="orb orb-2" />
 
         <form onSubmit={handleLogin} className="login-card">
-          <div className="login-logo">🌱</div>
+          <div className="login-logo"><FiLeaf style={{color:'#10b981',fontSize:'3rem'}} /></div>
           <h1 className="login-title">Happy Greenery</h1>
           <p className="login-subtitle">Admin Control Panel</p>
 
@@ -105,7 +121,7 @@ export default function AdminPortal() {
               Password
             </label>
             <div className="input-wrap">
-              <span className="input-icon">🔒</span>
+              <span className="input-icon" style={{display:'flex',alignItems:'center',color:'#6b7280'}}>🔒</span>
               <input
                 id="admin-pw"
                 type="password"
@@ -121,7 +137,7 @@ export default function AdminPortal() {
 
           {authError && (
             <div className="login-error">
-              <span>⚠️</span> {authError}
+              <span style={{display:'flex'}}>⚠️</span> {authError}
             </div>
           )}
 
@@ -307,7 +323,7 @@ export default function AdminPortal() {
      DASHBOARD LAYOUT
   ================================================================ */
   const activeTabDef = TABS.find((t) => t.id === activeTab) || TABS[0];
-  const ActiveComponent = activeTabDef.component;
+  const ActiveComponent = TAB_COMPONENTS[activeTab] || TAB_COMPONENTS.orders;
 
   return (
     <div className="dash">
@@ -320,7 +336,7 @@ export default function AdminPortal() {
       <aside className={`sidebar ${sidebarOpen ? "sidebar--open" : ""}`}>
         {/* Brand */}
         <div className="sb-brand">
-          <span className="sb-logo">🌱</span>
+          <span className="sb-logo"><FiLeaf /></span>
           <div className="sb-brand-text">
             <span className="sb-title">Happy Greenery</span>
             <span className="sb-role">Store Administration</span>
@@ -330,30 +346,33 @@ export default function AdminPortal() {
         {/* Nav */}
         <nav className="sb-nav">
           <span className="sb-section-label">Navigation</span>
-          {TABS.map((tab) => (
-            <button
-              key={tab.id}
-              onClick={() => handleTabClick(tab.id)}
-              className={`sb-item ${activeTab === tab.id ? "sb-item--active" : ""}`}
-            >
-              <span className="sb-item-icon">{tab.icon}</span>
-              <span className="sb-item-label">{tab.label}</span>
-              {activeTab === tab.id && <span className="sb-item-dot" />}
-            </button>
-          ))}
+          {TABS.map((tab) => {
+            const TabIcon = tab.Icon;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => handleTabClick(tab.id)}
+                className={`sb-item ${activeTab === tab.id ? "sb-item--active" : ""}`}
+              >
+                <span className="sb-item-icon"><TabIcon size={16} /></span>
+                <span className="sb-item-label">{tab.label}</span>
+                {activeTab === tab.id && <span className="sb-item-dot" />}
+              </button>
+            );
+          })}
         </nav>
 
         {/* Footer */}
         <div className="sb-footer">
           <div className="sb-user">
-            <span className="sb-user-av">👤</span>
+            <span className="sb-user-av"><FiUser size={20} /></span>
             <div className="sb-user-info">
               <span className="sb-user-name">Admin</span>
               <span className="sb-user-email">admin@greenworld.in</span>
             </div>
           </div>
           <button onClick={handleLogout} className="sb-logout">
-            <span>🚪</span> Log Out
+            <FiLogOut size={15} /> Log Out
           </button>
         </div>
       </aside>
@@ -369,13 +388,11 @@ export default function AdminPortal() {
               onClick={() => setSidebarOpen((v) => !v)}
               aria-label="Toggle menu"
             >
-              <span className={`hb-line ${sidebarOpen ? "hb-line--open1" : ""}`} />
-              <span className={`hb-line ${sidebarOpen ? "hb-line--open2" : ""}`} />
-              <span className={`hb-line ${sidebarOpen ? "hb-line--open3" : ""}`} />
+              {sidebarOpen ? <FiX size={22} color="#10b981" /> : <FiMenu size={22} />}
             </button>
 
             <div className="topbar-page-info">
-              <span className="topbar-icon">{activeTabDef.icon}</span>
+              <span className="topbar-icon">{activeTabDef && <activeTabDef.Icon size={22} />}</span>
               <div>
                 <h1 className="topbar-title">{activeTabDef.label}</h1>
                 <p className="topbar-subtitle">Direct MongoDB Access</p>
@@ -385,7 +402,7 @@ export default function AdminPortal() {
 
           <div className="topbar-right">
             <span className="topbar-badge">🟢 Live</span>
-            <button className="topbar-logout-mobile" onClick={handleLogout} title="Log out">🚪</button>
+            <button className="topbar-logout-mobile" onClick={handleLogout} title="Log out"><FiLogOut size={17} /></button>
           </div>
         </header>
 
@@ -446,7 +463,18 @@ export default function AdminPortal() {
           border-bottom: 1px solid var(--border-color, rgba(255,255,255,0.07));
           flex-shrink: 0;
         }
-        .sb-logo { font-size: 2rem; flex-shrink: 0; }
+        .sb-logo {
+          font-size: 1.6rem;
+          flex-shrink: 0;
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          color: #10b981;
+          background: rgba(16,185,129,0.12);
+          width: 40px;
+          height: 40px;
+          border-radius: 10px;
+        }
         .sb-brand-text {
           display: flex;
           flex-direction: column;
@@ -607,7 +635,12 @@ export default function AdminPortal() {
           align-items: center;
           gap: 12px;
         }
-        .topbar-icon { font-size: 1.4rem; }
+        .topbar-icon {
+          display: flex;
+          align-items: center;
+          color: #10b981;
+          flex-shrink: 0;
+        }
         .topbar-title {
           font-size: 1.05rem;
           font-weight: 700;
@@ -639,8 +672,8 @@ export default function AdminPortal() {
         /* ── Hamburger ── */
         .hamburger-btn {
           display: none;
-          flex-direction: column;
-          gap: 5px;
+          align-items: center;
+          justify-content: center;
           background: transparent;
           border: none;
           cursor: pointer;
@@ -648,20 +681,9 @@ export default function AdminPortal() {
           border-radius: 8px;
           transition: background 0.2s;
           flex-shrink: 0;
+          color: #9ca3af;
         }
-        .hamburger-btn:hover { background: rgba(255,255,255,0.05); }
-        .hb-line {
-          display: block;
-          width: 22px;
-          height: 2px;
-          background: #9ca3af;
-          border-radius: 2px;
-          transition: all 0.28s cubic-bezier(0.16, 1, 0.3, 1);
-          transform-origin: center;
-        }
-        .hb-line--open1 { transform: translateY(7px) rotate(45deg); background: #10b981; }
-        .hb-line--open2 { opacity: 0; transform: scaleX(0); }
-        .hb-line--open3 { transform: translateY(-7px) rotate(-45deg); background: #10b981; }
+        .hamburger-btn:hover { background: rgba(255,255,255,0.05); color: #e5e7eb; }
 
         .topbar-logout-mobile {
           display: none;
@@ -707,7 +729,7 @@ export default function AdminPortal() {
           }
           .mob-backdrop { display: block; }
           .hamburger-btn { display: flex; }
-          .topbar-logout-mobile { display: flex; align-items: center; }
+          .topbar-logout-mobile { display: flex; align-items: center; justify-content: center; }
           .topbar-badge { display: none; }
 
           /* Main takes full width */
@@ -718,9 +740,9 @@ export default function AdminPortal() {
 
         @media (max-width: 480px) {
           .topbar-subtitle { display: none; }
-          .topbar-icon { font-size: 1.2rem; }
           .topbar-title { font-size: 0.95rem; }
           .main-body { padding: 16px 12px; }
+          .sb-user-email { display: none; }
         }
 
         /* ══════ TAB LOADING OVERLAY ══════ */

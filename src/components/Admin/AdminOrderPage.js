@@ -3,6 +3,7 @@
 import { useEffect, useState, useMemo } from "react";
 import styles from "./adminOrders.module.css";
 import { API_BASE_URL } from "@/config/api";
+import { FiLoader, FiAlertCircle, FiSearch, FiPackage, FiMapPin, FiCreditCard, FiChevronDown } from "react-icons/fi";
 
 const STEPS = ["ORDERED", "SHIPPED", "PICKED", "ARRIVED", "DELIVERED"];
 
@@ -98,24 +99,13 @@ export default function AdminOrdersPage() {
   if (loading) {
     return (
       <div className={styles.page}>
-        <h1 className={styles.title}>Admin – All Orders</h1>
+        <h1 className={styles.title}>Orders</h1>
         <div style={{
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: "80px 20px",
-          gap: "20px",
+          display: "flex", flexDirection: "column", alignItems: "center",
+          justifyContent: "center", padding: "80px 20px", gap: "16px",
         }}>
-          <div style={{
-            width: "48px",
-            height: "48px",
-            border: "3px solid rgba(16,185,129,0.2)",
-            borderTop: "3px solid #10b981",
-            borderRadius: "50%",
-            animation: "orders-spin 0.8s linear infinite",
-          }} />
-          <p style={{ color: "#6b7280", fontSize: "0.95rem", margin: 0 }}>Fetching orders...</p>
+          <FiLoader size={40} color="#10b981" style={{animation:"orders-spin 0.8s linear infinite"}} />
+          <p style={{ color: "#6b7280", fontSize: "0.95rem", margin: 0 }}>Fetching orders from database...</p>
           <style>{`@keyframes orders-spin { to { transform: rotate(360deg); } }`}</style>
         </div>
       </div>
@@ -124,7 +114,7 @@ export default function AdminOrdersPage() {
 
   return (
     <div className={styles.page}>
-      <h1 className={styles.title}>Admin – All Orders</h1>
+      <h1 className={styles.title}>Orders</h1>
 
       {/* SEARCH AND FILTERING CONTROLS */}
       <div className={styles.controlsRow}>
@@ -187,6 +177,7 @@ export default function AdminOrdersPage() {
 
       {filteredOrders.length === 0 ? (
         <div className={styles.noOrders}>
+          <FiAlertCircle size={36} color="#374151" style={{marginBottom:8}} />
           <p>No orders matched your search and filter criteria.</p>
         </div>
       ) : (
@@ -224,7 +215,7 @@ export default function AdminOrdersPage() {
 
             {/* ADDRESS */}
             <div className={styles.section}>
-              <h4>Delivery Address</h4>
+              <h4><FiMapPin size={12} style={{marginRight:6}} />Delivery Address</h4>
               <p>{order.address?.fullName}</p>
               <p>{order.address?.phone}</p>
               <p>
@@ -237,7 +228,7 @@ export default function AdminOrdersPage() {
 
             {/* ITEMS */}
             <div className={styles.section}>
-              <h4>Items</h4>
+              <h4><FiPackage size={12} style={{marginRight:6}} />Items</h4>
               <div className={styles.items}>
                 {order.items.map((item, i) => (
                   <div key={i} className={styles.itemRow}>
@@ -256,7 +247,7 @@ export default function AdminOrdersPage() {
 
             {/* PAYMENT */}
             <div className={styles.section}>
-              <h4>Payment Details</h4>
+              <h4><FiCreditCard size={12} style={{marginRight:6}} />Payment Details</h4>
               <p>Razorpay Order ID: {order.payment?.razorpayOrderId || "-"}</p>
               <p>Payment ID: {order.payment?.razorpayPaymentId || "-"}</p>
               <p>Signature: {order.payment?.razorpaySignature || "-"}</p>

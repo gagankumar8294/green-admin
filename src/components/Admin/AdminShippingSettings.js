@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from "react";
 import styles from "./AdminShippingSettings.module.css";
 import { API_BASE_URL } from "@/config/api";
+import { FiLoader, FiSave, FiTruck, FiAlertCircle, FiCheckCircle } from "react-icons/fi";
 
 export default function AdminShippingSettings() {
   const [minOrder, setMinOrder] = useState(1000);
@@ -72,18 +73,24 @@ export default function AdminShippingSettings() {
   };
 
   if (loading) {
-    return <div className={styles.loader}>Loading settings...</div>;
+    return (
+      <div className={styles.settingsWrapper} style={{display:'flex',flexDirection:'column',alignItems:'center',justifyContent:'center',padding:'80px 20px',gap:'16px'}}>
+        <FiLoader size={36} color="#10b981" style={{animation:'spin 0.8s linear infinite'}} />
+        <p style={{color:'#6b7280',margin:0}}>Loading shipping settings...</p>
+        <style>{`@keyframes spin{to{transform:rotate(360deg)}}`}</style>
+      </div>
+    );
   }
 
   return (
     <div className={styles.settingsWrapper}>
-      <h2 className={styles.title}>Shipping Fee Configurations</h2>
+      <h2 className={styles.title}><FiTruck size={18} style={{marginRight:8}} />Shipping Fee Configurations</h2>
       <p className={styles.description}>
         Set the minimum order value required for free delivery and configure the flat rate shipping fee applied to orders below that threshold.
       </p>
 
-      {message && <div className={styles.successMessage}>{message}</div>}
-      {error && <div className={styles.errorMessage}>{error}</div>}
+      {message && <div className={styles.successMessage}><FiCheckCircle size={15} style={{marginRight:6}} />{message}</div>}
+      {error && <div className={styles.errorMessage}><FiAlertCircle size={15} style={{marginRight:6}} />{error}</div>}
 
       <form onSubmit={handleSave} className={styles.form}>
         <div className={styles.inputGroup}>
@@ -117,7 +124,7 @@ export default function AdminShippingSettings() {
         </div>
 
         <button type="submit" className={styles.saveBtn} disabled={saving}>
-          {saving ? "Saving Changes..." : "Save Settings"}
+          {saving ? <><FiLoader size={14} style={{marginRight:6,animation:'spin 0.8s linear infinite'}} />Saving...</> : <><FiSave size={14} style={{marginRight:6}} />Save Settings</>}
         </button>
       </form>
     </div>

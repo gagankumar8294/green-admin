@@ -4,6 +4,7 @@ import styles from "./Blogs.module.css";
 import { API_BASE_URL } from "@/config/api";
 import BlogForm from "../../CRUDBLOG/components/BlogForm";
 import { useBlogs } from "../../CRUDBLOG/hooks/useBlogs";
+import { FiArrowUp, FiArrowDown, FiTrash2, FiPlus, FiSave, FiGlobe, FiFileText } from "react-icons/fi";
 
 const CATEGORIES = [
   "flower-crops",
@@ -144,7 +145,7 @@ export default function AddBlogs() {
                   disabled={i === 0}
                   title="Move Up"
                 >
-                  ▲
+                  <FiArrowUp size={14} />
                 </button>
                 <button
                   type="button"
@@ -153,14 +154,14 @@ export default function AddBlogs() {
                   disabled={i === sections.length - 1}
                   title="Move Down"
                 >
-                  ▼
+                  <FiArrowDown size={14} />
                 </button>
                 <button
                   type="button"
                   className={styles.removeSectionBtn}
                   onClick={() => removeSection(i)}
                 >
-                  Remove
+                  <FiTrash2 size={13} style={{marginRight:4}} />Remove
                 </button>
               </div>
             </div>
@@ -356,7 +357,7 @@ export default function AddBlogs() {
             className={styles.draftBtn}
             onClick={() => submitBlog("draft")}
           >
-            {isEditing ? "Save Draft" : "Save as Draft"}
+            <FiSave size={14} style={{marginRight:6}} />{isEditing ? "Save Draft" : "Save as Draft"}
           </button>
           
           <button
@@ -364,7 +365,7 @@ export default function AddBlogs() {
             className={styles.publishBtn}
             onClick={() => submitBlog("published")}
           >
-            {isEditing ? "Update & Publish" : "Publish Blog"}
+            <FiGlobe size={14} style={{marginRight:6}} />{isEditing ? "Update & Publish" : "Publish Blog"}
           </button>
         </div>
       </form>

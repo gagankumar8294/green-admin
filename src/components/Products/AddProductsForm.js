@@ -4,6 +4,10 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import axios from "axios";
 import styles from "./AddProductForm.module.css";
 import { API_BASE_URL } from "@/config/api";
+import {
+  FiPackage, FiImage, FiSliders, FiTag, FiEdit2,
+  FiTrash2, FiRefreshCw, FiAlertCircle, FiLoader, FiCheck,
+} from "react-icons/fi";
 
 const CATEGORY_OPTIONS = [
   "Uncategorized",
@@ -55,6 +59,7 @@ export default function AddProductForm() {
   const [errors, setErrors] = useState({});
   const [uploadingMain, setUploadingMain] = useState(false);
   const [uploadingSub, setUploadingSub] = useState(false);
+  const [loadingProducts, setLoadingProducts] = useState(true);
 
   // Unified Product Management State
   const [products, setProducts] = useState([]);
@@ -91,8 +96,10 @@ export default function AddProductForm() {
   };
 
   useEffect(() => {
-    fetchProducts();
-    fetchDeletedProducts();
+    setLoadingProducts(true);
+    Promise.all([fetchProducts(), fetchDeletedProducts()]).finally(() =>
+      setLoadingProducts(false)
+    );
   }, []);
 
   const handleEdit = (p) => {
@@ -339,7 +346,7 @@ export default function AddProductForm() {
       <form className={styles.formContainer} onSubmit={(e) => e.preventDefault()}>
         <div className={styles.headerContainer}>
           <h2 className={styles.title}>
-            {isEditing ? `✏️ Edit Product: ${formData.name}` : "🌱 Add New Product"}
+            {isEditing ? <><FiEdit2 size={20} style={{marginRight:8}} />Edit Product: {formData.name}</> : <><FiPackage size={20} style={{marginRight:8}} />Add New Product</>}
           </h2>
           <p className={styles.subtitle}>
             {isEditing
@@ -350,7 +357,7 @@ export default function AddProductForm() {
 
       {/* Section 1: Basic Information */}
       <div className={styles.formSection}>
-        <h3 className={styles.sectionHeader}>📦 Basic Information</h3>
+        <h3 className={styles.sectionHeader}><FiPackage size={16} style={{marginRight:8}} />Basic Information</h3>
         
         <div className={styles.inputGroup}>
           <label className={styles.inputLabel}>Product Name</label>
@@ -381,7 +388,7 @@ export default function AddProductForm() {
 
       {/* Section 2: Product Images */}
       <div className={styles.formSection}>
-        <h3 className={styles.sectionHeader}>🖼 Product Images</h3>
+        <h3 className={styles.sectionHeader}><FiImage size={16} style={{marginRight:8}} />Product Images</h3>
         
         {/* Main Image Selection */}
         <div className={styles.imageFieldContainer}>
@@ -390,7 +397,7 @@ export default function AddProductForm() {
           <input className={styles.input} name="mainImageAlt" placeholder="Main Image Alt Text (for SEO)" value={formData.mainImageAlt} onChange={handleChange} style={{ marginTop: "6px" }} />
           <div className={styles.uploadBtnContainer}>
             <label className={styles.fileInputLabel}>
-              {uploadingMain ? "Uploading..." : "📁 Upload Main Image"}
+              {uploadingMain ? <><FiLoader size={14} style={{marginRight:6,animation:'spin 0.8s linear infinite'}} />Uploading...</> : <><FiImage size={14} style={{marginRight:6}} />Upload Main Image</>}
               <input
                 type="file"
                 accept="image/*"
@@ -433,7 +440,7 @@ export default function AddProductForm() {
           <div className={styles.subImagesTitleRow}>
             <h4 className={styles.subImagesTitle}>Sub Images</h4>
             <label className={styles.fileInputLabel}>
-              {uploadingSub ? "Uploading..." : "📁 Upload Multiple Sub Images"}
+              {uploadingSub ? <><FiLoader size={14} style={{marginRight:6,animation:'spin 0.8s linear infinite'}} />Uploading...</> : <><FiImage size={14} style={{marginRight:6}} />Upload Multiple Sub Images</>}
               <input
                 type="file"
                 accept="image/*"
@@ -530,7 +537,7 @@ export default function AddProductForm() {
 
       {/* Section 3: Specifications & Features */}
       <div className={styles.formSection}>
-        <h3 className={styles.sectionHeader}>📏 Specifications & Highlights</h3>
+        <h3 className={styles.sectionHeader}><FiSliders size={16} style={{marginRight:8}} />Specifications &amp; Highlights</h3>
         
         <div className={styles.gridThreeCols}>
           <div className={styles.inputGroup}>
@@ -589,7 +596,7 @@ export default function AddProductForm() {
 
       {/* Section 4: Categories */}
       <div className={styles.formSection}>
-        <h3 className={styles.sectionHeader}>🏷 Select Categories</h3>
+        <h3 className={styles.sectionHeader}><FiTag size={16} style={{marginRight:8}} />Select Categories</h3>
         <div className={styles.catBox}>
           {CATEGORY_OPTIONS.map((cat) => (
             <label key={cat} className={`${styles.catItem} ${selectedCategories.includes(cat) ? styles.catItemActive : ""}`}>
@@ -640,7 +647,7 @@ export default function AddProductForm() {
     {/* Unified Product List */}
     <div className={styles.listSection}>
       <div className={styles.listHeaderRow}>
-        <h2 className={styles.listTitle}>📦 Manage Products</h2>
+        <h2 className={styles.listTitle}><FiPackage size={18} style={{marginRight:8}} />Manage Products</h2>
         <div className={styles.tabButtonGroup}>
           <button
             onClick={() => setViewMode("active")}
@@ -682,8 +689,17 @@ export default function AddProductForm() {
         </select>
       </div>
 
-      {filteredProducts.length === 0 ? (
-        <p className={styles.noResults}>No products found.</p>
+      {loadingProducts ? (
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'60px 20px',gap:'16px'}}>
+          <FiLoader size={36} color="#10b981" style={{animation:'spin 0.8s linear infinite'}} />
+          <p style={{color:'#6b7280',margin:0,fontSize:'0.9rem'}}>Loading products...</p>
+          <style>{`@keyframes spin { to { transform: rotate(360deg); } }`}</style>
+        </div>
+      ) : filteredProducts.length === 0 ? (
+        <div style={{display:'flex',flexDirection:'column',alignItems:'center',padding:'60px 20px',gap:'12px'}}>
+          <FiAlertCircle size={36} color="#374151" />
+          <p className={styles.noResults}>No products found.</p>
+        </div>
       ) : (
         <div className={styles.productGrid}>
           {filteredProducts.map((p) => (
