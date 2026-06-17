@@ -12,8 +12,9 @@ import AdminAnalyticsPage from "./analytics/page";
 import {
   FiShoppingBag, FiPlusCircle, FiGrid, FiBarChart2,
   FiActivity, FiEdit3, FiMessageSquare, FiTruck,
-  FiMenu, FiX, FiLogOut, FiLeaf, FiUser,
+  FiMenu, FiX, FiLogOut, FiUser,
 } from "react-icons/fi";
+import { MdSpa } from "react-icons/md";
 
 /* ---------------------------------------------------------------
    TAB DEFINITIONS
@@ -112,7 +113,7 @@ export default function AdminPortal() {
         <div className="orb orb-2" />
 
         <form onSubmit={handleLogin} className="login-card">
-          <div className="login-logo"><FiLeaf style={{color:'#10b981',fontSize:'3rem'}} /></div>
+          <div className="login-logo"><MdSpa style={{color:'#10b981',fontSize:'3.5rem'}} /></div>
           <h1 className="login-title">Happy Greenery</h1>
           <p className="login-subtitle">Admin Control Panel</p>
 
@@ -336,7 +337,7 @@ export default function AdminPortal() {
       <aside className={`sidebar ${sidebarOpen ? "sidebar--open" : ""}`}>
         {/* Brand */}
         <div className="sb-brand">
-          <span className="sb-logo"><FiLeaf /></span>
+          <span className="sb-logo"><MdSpa /></span>
           <div className="sb-brand-text">
             <span className="sb-title">Happy Greenery</span>
             <span className="sb-role">Store Administration</span>
@@ -392,7 +393,9 @@ export default function AdminPortal() {
             </button>
 
             <div className="topbar-page-info">
-              <span className="topbar-icon">{activeTabDef && <activeTabDef.Icon size={22} />}</span>
+              <span className="topbar-icon">
+                {(() => { const I = activeTabDef?.Icon; return I ? <I size={22} /> : null; })()}
+              </span>
               <div>
                 <h1 className="topbar-title">{activeTabDef.label}</h1>
                 <p className="topbar-subtitle">Direct MongoDB Access</p>
