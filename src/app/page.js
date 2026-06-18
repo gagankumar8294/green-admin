@@ -57,6 +57,32 @@ export default function AdminPortal() {
   useEffect(() => {
     setIsClient(true);
     if (sessionStorage.getItem("admin_auth") === "true") setIsAuthorized(true);
+
+    // Read tab from query parameter first, then fallback to sessionStorage
+    const params = new URLSearchParams(window.location.search);
+    const urlTab = params.get("tab");
+    if (urlTab && TABS.some((t) => t.id === urlTab)) {
+      setActiveTab(urlTab);
+      sessionStorage.setItem("admin_active_tab", urlTab);
+    } else {
+      const savedTab = sessionStorage.getItem("admin_active_tab");
+      if (savedTab && TABS.some((t) => t.id === savedTab)) {
+        setActiveTab(savedTab);
+      }
+    }
+  }, []);
+
+  /* ── Handle browser Back/Forward navigation ── */
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const urlTab = params.get("tab");
+      if (urlTab && TABS.some((t) => t.id === urlTab)) {
+        setActiveTab(urlTab);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
   }, []);
 
   /* ── close sidebar when user picks a tab on mobile ── */
@@ -67,6 +93,13 @@ export default function AdminPortal() {
     // brief loading shimmer, then swap component
     setTimeout(() => {
       setActiveTab(id);
+      sessionStorage.setItem("admin_active_tab", id);
+
+      // Update URL search parameters
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", id);
+      window.history.pushState({}, "", url.toString());
+
       setTabLoading(false);
     }, 280);
   }, [activeTab]);
@@ -90,6 +123,11 @@ export default function AdminPortal() {
       setIsAuthorized(true);
       setAuthError("");
       sessionStorage.setItem("admin_auth", "true");
+
+      // Set URL search parameter on successful login
+      const url = new URL(window.location.href);
+      url.searchParams.set("tab", activeTab);
+      window.history.pushState({}, "", url.toString());
     } else {
       setAuthError("Incorrect password. Please try again.");
     }
@@ -98,6 +136,14 @@ export default function AdminPortal() {
   const handleLogout = () => {
     setIsAuthorized(false);
     sessionStorage.removeItem("admin_auth");
+    sessionStorage.removeItem("admin_active_tab");
+
+    // Clear URL search parameter on logout
+    const url = new URL(window.location.href);
+    url.searchParams.delete("tab");
+    window.history.pushState({}, "", url.pathname);
+
+    setActiveTab("orders");
   };
 
   if (!isClient) return null;
