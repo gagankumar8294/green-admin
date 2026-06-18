@@ -11,6 +11,27 @@ export default function AdminAnalyticsPage() {
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
 
+  // Fetch a single session by ID
+  const fetchSingleSession = async (sessionId) => {
+    try {
+      const response = await fetch(
+        `${API_BASE_URL}/api/analytics/sessions?sessionId=${sessionId}`,
+        { 
+          credentials: "include",
+          headers: {
+            "x-admin-authorization": "romeoPistol",
+          }
+        }
+      );
+      const data = await response.json();
+      if (data.success && data.sessions && data.sessions.length > 0) {
+        setSelectedSession(data.sessions[0]);
+      }
+    } catch (err) {
+      console.error("Failed to load specific session:", err);
+    }
+  };
+
   // Load sessions from API
   const fetchSessions = async (currentPage, currentFilter) => {
     setLoading(true);
@@ -36,6 +57,39 @@ export default function AdminAnalyticsPage() {
     }
   };
 
+  // On mount: read URL parameters
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const urlFilter = params.get("sessionFilter");
+    if (urlFilter && ["all", "auth", "anon"].includes(urlFilter)) {
+      setFilterType(urlFilter);
+    }
+    const urlSession = params.get("session");
+    if (urlSession) {
+      fetchSingleSession(urlSession);
+    }
+  }, []);
+
+  // Handle popstate (Back/Forward navigation)
+  useEffect(() => {
+    const handlePopState = () => {
+      const params = new URLSearchParams(window.location.search);
+      const urlFilter = params.get("sessionFilter") || "all";
+      setFilterType(urlFilter);
+      
+      const urlSession = params.get("session");
+      if (urlSession) {
+        if (!selectedSession || selectedSession.sessionId !== urlSession) {
+          fetchSingleSession(urlSession);
+        }
+      } else {
+        setSelectedSession(null);
+      }
+    };
+    window.addEventListener("popstate", handlePopState);
+    return () => window.removeEventListener("popstate", handlePopState);
+  }, [selectedSession]);
+
   useEffect(() => {
     fetchSessions(page, filterType);
   }, [page, filterType]);
@@ -56,6 +110,21 @@ export default function AdminAnalyticsPage() {
     setFilterType(type);
     setPage(1);
     setSelectedSession(null);
+
+    // Update URL query parameters
+    const url = new URL(window.location.href);
+    url.searchParams.set("sessionFilter", type);
+    url.searchParams.delete("session");
+    window.history.pushState({}, "", url.toString());
+  };
+
+  const handleSessionClick = (session) => {
+    setSelectedSession(session);
+
+    // Update URL query parameters
+    const url = new URL(window.location.href);
+    url.searchParams.set("session", session.sessionId);
+    window.history.pushState({}, "", url.toString());
   };
 
   // Helper to format duration in MM:SS
@@ -150,7 +219,7 @@ export default function AdminAnalyticsPage() {
                   <div 
                     key={session.sessionId}
                     className={`session-card ${isSelected ? "selected" : ""} ${isAuth ? "auth-card" : "anon-card"}`}
-                    onClick={() => setSelectedSession(session)}
+                    onClick={() => handleSessionClick(session)}
                   >
                     <div className="card-top">
                       <div className="user-profile">
