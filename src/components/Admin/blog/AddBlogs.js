@@ -22,6 +22,8 @@ const CATEGORIES = [
 
 export default function AddBlogs() {
   const blog = useBlogs();
+  const [activeBlogTab, setActiveBlogTab] = useState("manage");
+  const [activeInsertIndex, setActiveInsertIndex] = useState(null);
 
   const {
     title,
@@ -39,6 +41,7 @@ export default function AddBlogs() {
     removeSection,
     generateSlug,
     submitBlog,
+    handleEdit,
   } = blog;
 
   const uploadImages = async (files) => {
@@ -83,312 +86,348 @@ export default function AddBlogs() {
     setSections(updated);
   };
 
+  const insertSection = (index, type) => {
+    const newSection = {
+      type,
+      value: "",
+      alt: "",
+      linkText: "",
+      public_id: "",
+    };
+    const updated = [...sections];
+    updated.splice(index + 1, 0, newSection);
+    setSections(updated);
+  };
+
+  const handleEditWithTab = (blogData) => {
+    handleEdit(blogData);
+    setActiveBlogTab("add");
+  };
+
   return (
     <section className={styles.blogs_Section}>
-      <h2 className={styles.heading}>
-        {isEditing ? "Edit Blog" : "Add Blog"}
-      </h2>
-
-      <form onSubmit={(e) => e.preventDefault()}>
-        <input
-          ref={titleRef}
-          placeholder="Blog Title"
-          value={title}
-          onChange={(e) => {
-            setTitle(e.target.value);
-            setSlug(generateSlug(e.target.value));
-          }}
-          required
-        />
-
-        <input
-          placeholder="Slug"
-          value={slug}
-          onChange={(e) => setSlug(e.target.value)}
-          required
-        />
-
-        <div className={styles.catBox}>
-          {CATEGORIES.map((c) => {
-            const isChecked = Array.isArray(category) && category.includes(c);
-            return (
-              <label key={c} className={`${styles.catItem} ${isChecked ? styles.catItemActive : ""}`}>
-                <input
-                  type="checkbox"
-                  className={styles.catCheckbox}
-                  checked={isChecked}
-                  onChange={() => {
-                    if (isChecked) {
-                      setCategory(category.filter((item) => item !== c));
-                    } else {
-                      setCategory([...category, c]);
-                    }
-                  }}
-                />
-                <span className={styles.catName}>{c.replace("-", " ")}</span>
-              </label>
-            );
-          })}
-        </div>
-
-        {/* Sections */}
-        {sections.map((sec, i) => (
-          <div key={i} className={styles.sectionBox}>
-            <div className={styles.sectionHeader}>
-              <span className={styles.sectionTypeLabel}>{sec.type.toUpperCase()}</span>
-
-              <div className={styles.sectionActions}>
-                <button
-                  type="button"
-                  className={styles.moveBtn}
-                  onClick={() => moveSectionUp(i)}
-                  disabled={i === 0}
-                  title="Move Up"
-                >
-                  <FiArrowUp size={14} />
-                </button>
-                <button
-                  type="button"
-                  className={styles.moveBtn}
-                  onClick={() => moveSectionDown(i)}
-                  disabled={i === sections.length - 1}
-                  title="Move Down"
-                >
-                  <FiArrowDown size={14} />
-                </button>
-                <button
-                  type="button"
-                  className={styles.removeSectionBtn}
-                  onClick={() => removeSection(i)}
-                >
-                  <FiTrash2 size={13} style={{marginRight:4}} />Remove
-                </button>
-              </div>
-            </div>
-            {sec.type !== "link" && (
-              <textarea
-                className={styles.fullWidthTextarea}
-                placeholder={sec.type.toUpperCase()}
-                value={sec.value}
-                onChange={(e) => updateSection(i, "value", e.target.value)}
-                required={sec.type === "h1"} // H1 mandatory
-              />
-            )}
-
-            {/* {sec.type === "image" && (
-  <>
-    <input
-      type="file"
-      accept="image/*"
-      onChange={async (e) => {
-        try {
-          const uploaded = await uploadImages(e.target.files);
-
-          if (uploaded?.length > 0) {
-            updateSection(i, "value", uploaded[0].url);
-            updateSection(i, "public_id", uploaded[0].public_id);
-          }
-        } catch (err) {
-          console.error(err);
-          alert("Image upload failed");
-        }
-      }}
-    />
-
-    {sec.value && (
-      <img
-        src={sec.value}
-        alt="preview"
-        style={{
-          width: "120px",
-          marginTop: "10px",
-          borderRadius: "8px",
-        }}
-      />
-    )}
-
-    <input
-      placeholder="Image Alt Text"
-      value={sec.alt}
-      onChange={(e) => updateSection(i, "alt", e.target.value)}
-      required
-    />
-  </>
-)} */}
-{sec.type === "image" && (
-  <>
-    <input
-      type="file"
-      accept="image/*"
-      onChange={async (e) => {
-        try {
-          const uploaded = await uploadImages(e.target.files);
-
-          if (uploaded?.length > 0) {
-            updateSection(i, "value", uploaded[0].url);
-            updateSection(i, "public_id", uploaded[0].public_id);
-          }
-        } catch (err) {
-          console.error(err);
-          alert("Image upload failed");
-        }
-      }}
-    />
-
-    {sec.value && (
-      <div className={styles.imagePreviewBox}>
-        <img
-          src={sec.value}
-          alt="preview"
-          style={{
-            width: "120px",
-            marginTop: "10px",
-            borderRadius: "8px",
-          }}
-        />
-        <input
-      className={styles.fullWidthTextarea}
-      placeholder="Image Alt Text"
-      value={sec.alt}
-      onChange={(e) => updateSection(i, "alt", e.target.value)}
-      required={!!sec.value}
-    />
-
+      <div className={styles.tabContainer}>
         <button
           type="button"
-          className={styles.removeImageBtn}
-          onClick={() => {
-            updateSection(i, "value", "");
-            updateSection(i, "public_id", "");
-          }}
+          className={`${styles.tabBtn} ${activeBlogTab === "add" ? styles.tabBtnActive : ""}`}
+          onClick={() => setActiveBlogTab("add")}
         >
-          Remove Image
+          <FiFileText size={16} /> {isEditing ? "Edit Blog" : "Write Blog"}
+        </button>
+        <button
+          type="button"
+          className={`${styles.tabBtn} ${activeBlogTab === "manage" ? styles.tabBtnActive : ""}`}
+          onClick={() => setActiveBlogTab("manage")}
+        >
+          <FiGlobe size={16} /> Manage Blogs
         </button>
       </div>
-    )}
-  </>
-)}
 
-            {sec.type === "link" && (
-              <div className={styles.linkRow}>
-              <>
-                <input
+      {activeBlogTab === "add" ? (
+        <form onSubmit={(e) => e.preventDefault()}>
+          <h2 className={styles.heading}>
+            {isEditing ? "Edit Blog" : "Add Blog"}
+          </h2>
+
+          <input
+            ref={titleRef}
+            placeholder="Blog Title"
+            value={title}
+            onChange={(e) => {
+              setTitle(e.target.value);
+              setSlug(generateSlug(e.target.value));
+            }}
+            required
+          />
+
+          <input
+            placeholder="Slug"
+            value={slug}
+            onChange={(e) => setSlug(e.target.value)}
+            required
+          />
+
+          <div className={styles.catBox}>
+            {CATEGORIES.map((c) => {
+              const isChecked = Array.isArray(category) && category.includes(c);
+              return (
+                <label key={c} className={`${styles.catItem} ${isChecked ? styles.catItemActive : ""}`}>
+                  <input
+                    type="checkbox"
+                    className={styles.catCheckbox}
+                    checked={isChecked}
+                    onChange={() => {
+                      if (isChecked) {
+                        setCategory(category.filter((item) => item !== c));
+                      } else {
+                        setCategory([...category, c]);
+                      }
+                    }}
+                  />
+                  <span className={styles.catName}>{c.replace("-", " ")}</span>
+                </label>
+              );
+            })}
+          </div>
+
+          {/* Sections */}
+          {sections.map((sec, i) => (
+            <div key={i} className={styles.sectionBox}>
+              <div className={styles.sectionHeader}>
+                <span className={styles.sectionTypeLabel}>{sec.type.toUpperCase()}</span>
+
+                <div className={styles.sectionActions}>
+                  <button
+                    type="button"
+                    className={styles.insertBtn}
+                    onClick={() => setActiveInsertIndex(activeInsertIndex === i ? null : i)}
+                    title="Insert Section Below"
+                  >
+                    <FiPlus size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.moveBtn}
+                    onClick={() => moveSectionUp(i)}
+                    disabled={i === 0}
+                    title="Move Up"
+                  >
+                    <FiArrowUp size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.moveBtn}
+                    onClick={() => moveSectionDown(i)}
+                    disabled={i === sections.length - 1}
+                    title="Move Down"
+                  >
+                    <FiArrowDown size={14} />
+                  </button>
+                  <button
+                    type="button"
+                    className={styles.removeSectionBtn}
+                    onClick={() => removeSection(i)}
+                  >
+                    <FiTrash2 size={13} style={{marginRight:4}} />Remove
+                  </button>
+                </div>
+              </div>
+              {sec.type !== "link" && (
+                <textarea
                   className={styles.fullWidthTextarea}
-                  placeholder="Link Text"
-                  value={sec.linkText}
-                  onChange={(e) => updateSection(i, "linkText", e.target.value)}
-                />
-                <input
-                  className={styles.fullWidthTextarea}
-                  placeholder="URL"
+                  placeholder={sec.type.toUpperCase()}
                   value={sec.value}
                   onChange={(e) => updateSection(i, "value", e.target.value)}
+                  required={sec.type === "h1"} // H1 mandatory
                 />
-              </>
-              </div>
-            )}
-          </div>
-        ))}
+              )}
 
-        <div className={styles.quickAddContainer}>
-          <span className={styles.quickAddLabel}>Quick Add Section:</span>
-          <div className={styles.quickAddButtons}>
-            <button
-              type="button"
-              className={styles.quickAddBtn}
-              onClick={() => addSection("h1")}
-            >
-              + H1
-            </button>
-            <button
-              type="button"
-              className={styles.quickAddBtn}
-              onClick={() => addSection("h2")}
-            >
-              + H2
-            </button>
-            <button
-              type="button"
-              className={styles.quickAddBtn}
-              onClick={() => addSection("paragraph")}
-            >
-              + Paragraph
-            </button>
-            <button
-              type="button"
-              className={styles.quickAddBtn}
-              onClick={() => addSection("image")}
-            >
-              + Image
-            </button>
-            <button
-              type="button"
-              className={styles.quickAddBtn}
-              onClick={() => addSection("link")}
-            >
-              + Link
-            </button>
-          </div>
-        </div>
+              {sec.type === "image" && (
+                <>
+                  <input
+                    type="file"
+                    accept="image/*"
+                    onChange={async (e) => {
+                      try {
+                        const uploaded = await uploadImages(e.target.files);
 
-        <div className={styles.dividerRow}>
-          <span>or use dropdown</span>
-        </div>
+                        if (uploaded?.length > 0) {
+                          updateSection(i, "value", uploaded[0].url);
+                          updateSection(i, "public_id", uploaded[0].public_id);
+                        }
+                      } catch (err) {
+                        console.error(err);
+                        alert("Image upload failed");
+                      }
+                    }}
+                  />
 
-        <select
-          value=""
-          onChange={(e) => {
-            if (e.target.value) {
-              addSection(e.target.value);
-            }
-          }}
-        >
-          <option value="" disabled>Choose section type...</option>
-          <option value="h1">H1</option>
-          <option value="h2">H2</option>
-          <option value="paragraph">Paragraph</option>
-          <option value="image">Image</option>
-          <option value="link">Link</option>
-        </select>
+                  {sec.value && (
+                    <div className={styles.imagePreviewBox}>
+                      <img
+                        src={sec.value}
+                        alt="preview"
+                        style={{
+                          width: "120px",
+                          marginTop: "10px",
+                          borderRadius: "8px",
+                        }}
+                      />
+                      <input
+                        className={styles.fullWidthTextarea}
+                        placeholder="Image Alt Text"
+                        value={sec.alt}
+                        onChange={(e) => updateSection(i, "alt", e.target.value)}
+                        required={!!sec.value}
+                      />
 
-        <div className={styles.actionButtonsRow}>
-          <button
-            type="button"
-            className={styles.draftBtn}
-            onClick={() => submitBlog("draft")}
-          >
-            <FiSave size={14} style={{marginRight:6}} />{isEditing ? "Save Draft" : "Save as Draft"}
-          </button>
-          
-          <button
-            type="button"
-            className={styles.publishBtn}
-            onClick={() => submitBlog("published")}
-          >
-            <FiGlobe size={14} style={{marginRight:6}} />{isEditing ? "Update & Publish" : "Publish Blog"}
-          </button>
-        </div>
-      </form>
+                      <button
+                        type="button"
+                        className={styles.removeImageBtn}
+                        onClick={() => {
+                          updateSection(i, "value", "");
+                          updateSection(i, "public_id", "");
+                        }}
+                      >
+                        Remove Image
+                      </button>
+                    </div>
+                  )}
+                </>
+              )}
 
-      <hr className={styles.divider} />
+              {sec.type === "link" && (
+                <div className={styles.linkRow}>
+                  <input
+                    className={styles.fullWidthTextarea}
+                    placeholder="Link Text"
+                    value={sec.linkText}
+                    onChange={(e) => updateSection(i, "linkText", e.target.value)}
+                  />
+                  <input
+                    className={styles.fullWidthTextarea}
+                    placeholder="URL"
+                    value={sec.value}
+                    onChange={(e) => updateSection(i, "value", e.target.value)}
+                  />
+                </div>
+              )}
 
-      <h2>Blogs</h2>
-      {/* <div className={styles.blogList}>
-        {blogs.map((b) => (
-          <div key={b._id} className={styles.blogCard}>
-            <h3>{b.sections.find((s) => s.type === "h1")?.value}</h3>
-            <div className={styles.blogButtons}>
-              <button className={styles.editBtn} onClick={() => handleEdit(b)}>
-                Edit
+              {activeInsertIndex === i && (
+                <div className={styles.insertSubMenu}>
+                  <span className={styles.insertLabel}>Insert below:</span>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      insertSection(i, "h1");
+                      setActiveInsertIndex(null);
+                    }}
+                  >
+                    + H1
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      insertSection(i, "h2");
+                      setActiveInsertIndex(null);
+                    }}
+                  >
+                    + H2
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      insertSection(i, "paragraph");
+                      setActiveInsertIndex(null);
+                    }}
+                  >
+                    + Paragraph
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      insertSection(i, "image");
+                      setActiveInsertIndex(null);
+                    }}
+                  >
+                    + Image
+                  </button>
+                  <button
+                    type="button"
+                    onClick={() => {
+                      insertSection(i, "link");
+                      setActiveInsertIndex(null);
+                    }}
+                  >
+                    + Link
+                  </button>
+                </div>
+              )}
+            </div>
+          ))}
+
+          <div className={styles.quickAddContainer}>
+            <span className={styles.quickAddLabel}>Quick Add Section:</span>
+            <div className={styles.quickAddButtons}>
+              <button
+                type="button"
+                className={styles.quickAddBtn}
+                onClick={() => addSection("h1")}
+              >
+                + H1
               </button>
-              <button className={styles.deleteBtn} onClick={() => deleteBlog(b._id)}>
-                Delete
+              <button
+                type="button"
+                className={styles.quickAddBtn}
+                onClick={() => addSection("h2")}
+              >
+                + H2
+              </button>
+              <button
+                type="button"
+                className={styles.quickAddBtn}
+                onClick={() => addSection("paragraph")}
+              >
+                + Paragraph
+              </button>
+              <button
+                type="button"
+                className={styles.quickAddBtn}
+                onClick={() => addSection("image")}
+              >
+                + Image
+              </button>
+              <button
+                type="button"
+                className={styles.quickAddBtn}
+                onClick={() => addSection("link")}
+              >
+                + Link
               </button>
             </div>
           </div>
-        ))}
-      </div> */}
-      <BlogForm {...blog} />
+
+          <div className={styles.dividerRow}>
+            <span>or use dropdown</span>
+          </div>
+
+          <select
+            value=""
+            onChange={(e) => {
+              if (e.target.value) {
+                addSection(e.target.value);
+              }
+            }}
+          >
+            <option value="" disabled>Choose section type...</option>
+            <option value="h1">H1</option>
+            <option value="h2">H2</option>
+            <option value="paragraph">Paragraph</option>
+            <option value="image">Image</option>
+            <option value="link">Link</option>
+          </select>
+
+          <div className={styles.actionButtonsRow}>
+            <button
+              type="button"
+              className={styles.draftBtn}
+              onClick={() => submitBlog("draft")}
+            >
+              <FiSave size={14} style={{marginRight:6}} />{isEditing ? "Save Draft" : "Save as Draft"}
+            </button>
+            
+            <button
+              type="button"
+              className={styles.publishBtn}
+              onClick={() => submitBlog("published")}
+            >
+              <FiGlobe size={14} style={{marginRight:6}} />{isEditing ? "Update & Publish" : "Publish Blog"}
+            </button>
+          </div>
+        </form>
+      ) : (
+        <BlogForm {...blog} handleEdit={handleEditWithTab} />
+      )}
     </section>
   );
 }

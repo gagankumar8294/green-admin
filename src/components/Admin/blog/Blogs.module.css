@@ -118,29 +118,68 @@
 }
 
 .editBtn,
-.deleteBtn {
+.deleteBtn,
+.restoreBtn,
+.permanentDeleteBtn {
   flex: 1;
-  padding: 8px;
+  padding: 8px 12px;
   font-size: 13px;
+  font-weight: 600;
   border-radius: 6px;
   border: none;
   cursor: pointer;
-  transition: opacity 0.2s ease, transform 0.2s ease;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .editBtn {
+  background: rgba(33, 150, 243, 0.1);
+  border: 1px solid rgba(33, 150, 243, 0.3) !important;
+  color: #2196f3;
+}
+
+.editBtn:hover {
   background: #2196f3;
   color: #fff;
+  transform: translateY(-1px);
 }
 
 .deleteBtn {
-  background: #f44336;
-  color: #fff;
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3) !important;
+  color: #f44336;
 }
 
-.editBtn:hover,
 .deleteBtn:hover {
-  opacity: 0.85;
+  background: #f44336;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.restoreBtn {
+  background: rgba(76, 175, 80, 0.1);
+  border: 1px solid rgba(76, 175, 80, 0.3) !important;
+  color: #4caf50;
+}
+
+.restoreBtn:hover {
+  background: #4caf50;
+  color: #fff;
+  transform: translateY(-1px);
+}
+
+.permanentDeleteBtn {
+  background: rgba(244, 67, 54, 0.1);
+  border: 1px solid rgba(244, 67, 54, 0.3) !important;
+  color: #f44336;
+}
+
+.permanentDeleteBtn:hover {
+  background: #f44336;
+  color: #fff;
   transform: translateY(-1px);
 }
 
@@ -490,4 +529,110 @@
   font-size: 13px;
   font-weight: 500;
   color: var(--text);
+}
+
+/* Tabs */
+.tabContainer {
+  display: flex;
+  justify-content: center;
+  gap: 12px;
+  margin-bottom: 24px;
+  border-bottom: 1px solid var(--border-color);
+  padding-bottom: 12px;
+}
+
+.tabBtn {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 20px;
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--text-faint);
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  position: relative;
+}
+
+.tabBtn:hover {
+  color: var(--text);
+}
+
+.tabBtnActive {
+  color: var(--theme-add-btn);
+}
+
+.tabBtnActive::after {
+  content: '';
+  position: absolute;
+  bottom: -13px;
+  left: 0;
+  right: 0;
+  height: 2px;
+  background: var(--theme-add-btn);
+  border-radius: 2px;
+}
+
+/* Insert Sub Menu */
+.insertBtn {
+  padding: 6px 10px;
+  border: 1px solid var(--border-color);
+  border-radius: 6px;
+  background: var(--input-bg);
+  color: var(--theme-add-btn);
+  font-size: 11px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.insertBtn:hover {
+  background: var(--theme-add-btn);
+  color: #fff;
+  border-color: var(--theme-add-btn);
+  transform: translateY(-1px);
+}
+
+.insertSubMenu {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px dashed var(--border-color);
+  animation: fadeIn 0.2s ease-out;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; transform: translateY(-5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+
+.insertLabel {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-faint);
+  margin-right: 4px;
+}
+
+.insertSubMenu button {
+  padding: 4px 8px;
+  font-size: 11px;
+  font-weight: 600;
+  border-radius: 4px;
+  border: 1px solid var(--border-color) !important;
+  background: var(--input-bg);
+  color: var(--text);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.insertSubMenu button:hover {
+  background: var(--theme-add-btn);
+  color: white;
+  border-color: var(--theme-add-btn) !important;
 }

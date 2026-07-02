@@ -1,6 +1,7 @@
 "use client";
 
 import { useState, useMemo } from "react";
+import { FiEdit, FiTrash2, FiRefreshCw } from "react-icons/fi";
 import styles from "./Blogs.module.css";
 
 const ALL_CATEGORIES = [
@@ -266,34 +267,38 @@ export default function BlogForm({
                     className={styles.editBtn}
                     onClick={() => handleEdit(b)}
                     type="button"
+                    title="Edit Blog"
                   >
-                    Edit
+                    <FiEdit size={14} /> Edit
                   </button>
 
                   <button
                     className={styles.deleteBtn}
                     onClick={() => openDeletePopup(b._id, b.title)}
                     type="button"
+                    title="Move to Trash"
                   >
-                    Delete
+                    <FiTrash2 size={14} /> Delete
                   </button>
                 </>
               ) : (
                 <>
                   <button
-                    className={styles.editBtn}
+                    className={styles.restoreBtn}
                     onClick={() => restoreBlog(b._id)}
                     type="button"
+                    title="Restore Blog"
                   >
-                    Restore
+                    <FiRefreshCw size={14} /> Restore
                   </button>
 
                   <button
-                    className={styles.deleteBtn}
+                    className={styles.permanentDeleteBtn}
                     onClick={() => openPermanentDeletePopup(b._id, b.title)}
                     type="button"
+                    title="Permanently Delete Blog"
                   >
-                    Permanent Delete
+                    <FiTrash2 size={14} /> Delete
                   </button>
                 </>
               )}
