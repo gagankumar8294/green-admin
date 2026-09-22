@@ -174,7 +174,7 @@ export default function AddBlogs() {
           {sections.map((sec, i) => (
             <div key={i} className={styles.sectionBox}>
               <div className={styles.sectionHeader}>
-                <span className={styles.sectionTypeLabel}>{sec.type.toUpperCase()}</span>
+                <span className={styles.sectionTypeLabel}>{(sec?.type || "SECTION").toUpperCase()}</span>
 
                 <div className={styles.sectionActions}>
                   <button
@@ -215,7 +215,7 @@ export default function AddBlogs() {
               {sec.type !== "link" && (
                 <textarea
                   className={styles.fullWidthTextarea}
-                  placeholder={sec.type.toUpperCase()}
+                  placeholder={(sec?.type || "CONTENT").toUpperCase()}
                   value={sec.value}
                   onChange={(e) => updateSection(i, "value", e.target.value)}
                   required={sec.type === "h1"} // H1 mandatory
