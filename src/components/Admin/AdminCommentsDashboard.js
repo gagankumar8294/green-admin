@@ -3,6 +3,20 @@
 import { useEffect, useState, useMemo } from "react";
 import styles from "./AdminCommentsDashboard.module.css";
 import { API_BASE_URL } from "@/config/api";
+import CustomDropdown from "@/components/Shared/CustomDropdown";
+
+const MODERATION_STATUS_OPTIONS = [
+  { value: "all", label: "All Comments" },
+  { value: "active", label: "Active Comments" },
+  { value: "deleted", label: "Soft-Deleted" },
+];
+
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "username-asc", label: "Username: A-Z" },
+  { value: "username-desc", label: "Username: Z-A" },
+];
 
 export default function AdminCommentsDashboard() {
   const [comments, setComments] = useState([]);
@@ -239,29 +253,20 @@ export default function AdminCommentsDashboard() {
 
           <div className={styles.filterControl}>
             <label>Moderation Status</label>
-            <select
+            <CustomDropdown
               value={statusFilter}
-              onChange={(e) => setStatusFilter(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="all">All Comments</option>
-              <option value="active">Active Comments</option>
-              <option value="deleted">Soft-Deleted</option>
-            </select>
+              options={MODERATION_STATUS_OPTIONS}
+              onChange={(e) => setStatusFilter(e?.target ? e.target.value : e)}
+            />
           </div>
 
           <div className={styles.filterControl}>
             <label>Sort By</label>
-            <select
+            <CustomDropdown
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="username-asc">Username: A-Z</option>
-              <option value="username-desc">Username: Z-A</option>
-            </select>
+              options={SORT_OPTIONS}
+              onChange={(e) => setSortBy(e?.target ? e.target.value : e)}
+            />
           </div>
         </div>
       </div>

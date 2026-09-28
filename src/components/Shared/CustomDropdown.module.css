@@ -1,0 +1,216 @@
+/* -------------------------------------------------------------
+   SHARED CUSTOM DROPDOWN (FRONTEND-MATCHED DESIGN)
+   Ported & enhanced from green frontend (ProductClient / Products.module.css)
+   ------------------------------------------------------------- */
+
+.dropdownContainer {
+  position: relative;
+  display: inline-block;
+  user-select: none;
+  vertical-align: middle;
+}
+
+.fullWidth {
+  display: block;
+  width: 100%;
+}
+
+/* Trigger Button */
+.triggerBtn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  width: 100%;
+  padding: 9px 14px;
+  background: var(--input-bg, #0d1117);
+  border: 1px solid var(--input-border, rgba(255, 255, 255, 0.12));
+  border-radius: 8px;
+  color: var(--text, #e5e7eb);
+  font-size: 13.5px;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: all 0.22s cubic-bezier(0.4, 0, 0.2, 1);
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  min-height: 38px;
+  box-sizing: border-box;
+}
+
+.triggerBtn:hover:not(:disabled) {
+  background: var(--hover-bg, #1a2332);
+  border-color: var(--theme-add-btn, #10b981);
+}
+
+.triggerOpen {
+  border-color: var(--theme-add-btn, #10b981) !important;
+  background: var(--hover-bg, #1a2332);
+  box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.18);
+}
+
+.triggerDisabled {
+  opacity: 0.5;
+  cursor: not-allowed !important;
+  pointer-events: none;
+}
+
+/* Compact size */
+.sizeSm {
+  padding: 5px 10px;
+  font-size: 12.5px;
+  border-radius: 6px;
+  min-height: 30px;
+}
+
+/* Trigger content layout */
+.triggerContent {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  flex: 1;
+  overflow: hidden;
+}
+
+.icon {
+  width: 15px;
+  height: 15px;
+  color: var(--theme-add-btn, #10b981);
+  flex-shrink: 0;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.labelText {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  text-align: left;
+}
+
+.placeholder {
+  color: var(--text-faint, #6b7280);
+}
+
+.chevron {
+  width: 14px;
+  height: 14px;
+  opacity: 0.6;
+  margin-left: auto;
+  flex-shrink: 0;
+  transition: transform 0.25s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.2s ease, color 0.2s ease;
+}
+
+.chevronOpen {
+  transform: rotate(180deg);
+  opacity: 1;
+  color: var(--theme-add-btn, #10b981);
+}
+
+/* Animated Menu Panel */
+.menu {
+  position: absolute;
+  top: calc(100% + 6px);
+  min-width: 100%;
+  width: max-content;
+  max-width: 340px;
+  background: var(--card-bg, #111827);
+  border: 1px solid var(--card-border, rgba(255, 255, 255, 0.1));
+  border-radius: 12px;
+  padding: 6px;
+  box-shadow: 0 16px 36px rgba(0, 0, 0, 0.5), 0 4px 12px rgba(0, 0, 0, 0.25);
+  z-index: 1000;
+  opacity: 0;
+  visibility: hidden;
+  transform: translateY(-8px) scale(0.96);
+  transition: opacity 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              transform 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              visibility 0.2s;
+  pointer-events: none;
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  max-height: 270px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.2) transparent;
+}
+
+.menu::-webkit-scrollbar {
+  width: 5px;
+}
+.menu::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 4px;
+}
+
+.alignLeft {
+  left: 0;
+  transform-origin: top left;
+}
+
+.alignRight {
+  right: 0;
+  transform-origin: top right;
+}
+
+.menuOpen {
+  opacity: 1;
+  visibility: visible;
+  transform: translateY(0) scale(1);
+  pointer-events: auto;
+}
+
+/* Menu Items */
+.menuItem {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 8px 12px;
+  border: none;
+  background: transparent;
+  color: var(--text, #e5e7eb);
+  font-size: 13.5px;
+  text-align: left;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.18s ease;
+  gap: 10px;
+  user-select: none;
+  box-sizing: border-box;
+}
+
+.menuItem:hover:not(:disabled) {
+  background: var(--hover-bg, #1a2332);
+  color: var(--theme-add-btn, #10b981);
+  padding-left: 15px;
+}
+
+.menuItem:disabled {
+  opacity: 0.45;
+  cursor: not-allowed;
+}
+
+.menuItemSelected {
+  color: var(--theme-add-btn, #10b981);
+  font-weight: 600;
+  background: rgba(16, 185, 129, 0.12);
+}
+
+.itemContent {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  min-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.checkIcon {
+  width: 15px;
+  height: 15px;
+  color: var(--theme-add-btn, #10b981);
+  flex-shrink: 0;
+}

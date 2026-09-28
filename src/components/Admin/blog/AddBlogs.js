@@ -5,6 +5,15 @@ import { API_BASE_URL } from "@/config/api";
 import BlogForm from "../../CRUDBLOG/components/BlogForm";
 import { useBlogs } from "../../CRUDBLOG/hooks/useBlogs";
 import { FiArrowUp, FiArrowDown, FiTrash2, FiPlus, FiSave, FiGlobe, FiFileText } from "react-icons/fi";
+import CustomDropdown from "@/components/Shared/CustomDropdown";
+
+const SECTION_TYPE_OPTIONS = [
+  { value: "h1", label: "H1" },
+  { value: "h2", label: "H2" },
+  { value: "paragraph", label: "Paragraph" },
+  { value: "image", label: "Image" },
+  { value: "link", label: "Link" },
+];
 
 const CATEGORIES = [
   "flower-crops",
@@ -391,21 +400,18 @@ export default function AddBlogs() {
             <span>or use dropdown</span>
           </div>
 
-          <select
+          <CustomDropdown
             value=""
+            placeholder="Choose section type..."
+            options={SECTION_TYPE_OPTIONS}
+            fullWidth={true}
             onChange={(e) => {
-              if (e.target.value) {
-                addSection(e.target.value);
+              const val = e?.target ? e.target.value : e;
+              if (val) {
+                addSection(val);
               }
             }}
-          >
-            <option value="" disabled>Choose section type...</option>
-            <option value="h1">H1</option>
-            <option value="h2">H2</option>
-            <option value="paragraph">Paragraph</option>
-            <option value="image">Image</option>
-            <option value="link">Link</option>
-          </select>
+          />
 
           <div className={styles.actionButtonsRow}>
             <button

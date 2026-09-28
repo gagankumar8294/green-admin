@@ -2,14 +2,52 @@
 
 import React, { useState, useEffect } from "react";
 import { API_BASE_URL } from "@/config/api";
+import {
+  FiUsers,
+  FiUserCheck,
+  FiUserX,
+  FiUser,
+  FiCalendar,
+  FiX,
+  FiClock,
+  FiSun,
+  FiGlobe,
+  FiActivity,
+  FiChevronLeft,
+  FiChevronRight,
+  FiNavigation,
+  FiMousePointer,
+  FiKey,
+  FiDatabase,
+  FiFilter,
+} from "react-icons/fi";
+import { MdSpa } from "react-icons/md";
 
 export default function AdminAnalyticsPage() {
   const [sessions, setSessions] = useState([]);
   const [loading, setLoading] = useState(true);
   const [selectedSession, setSelectedSession] = useState(null);
+  const [selectedDate, setSelectedDate] = useState("");
   const [filterType, setFilterType] = useState("all"); // 'all', 'auth', 'anon'
   const [page, setPage] = useState(1);
   const [totalPages, setTotalPages] = useState(1);
+  const [totalRecords, setTotalRecords] = useState(0);
+
+  // Generate the last 7 days for round-border quick filter day pills
+  const recentDays = React.useMemo(() => {
+    const list = [];
+    const today = new Date();
+    for (let i = 0; i < 7; i++) {
+      const d = new Date(today);
+      d.setDate(today.getDate() - i);
+      const ymd = `${d.getFullYear()}-${String(d.getMonth() + 1).padStart(2, "0")}-${String(d.getDate()).padStart(2, "0")}`;
+      const dayName = i === 0 ? "Today" : i === 1 ? "Yesterday" : d.toLocaleDateString("en-US", { weekday: "short" });
+      const dayNum = d.getDate();
+      const monthName = d.toLocaleDateString("en-US", { month: "short" });
+      list.push({ ymd, dayName, dayNum, monthName, isToday: i === 0 });
+    }
+    return list;
+  }, []);
 
   // Fetch a single session by ID
   const fetchSingleSession = async (sessionId) => {
@@ -32,12 +70,14 @@ export default function AdminAnalyticsPage() {
     }
   };
 
-  // Load sessions from API
-  const fetchSessions = async (currentPage, currentFilter) => {
+  // Load sessions from API (supports date and morning-to-evening chronological sorting)
+  const fetchSessions = async (currentPage, currentFilter, currentDate) => {
     setLoading(true);
     try {
+      const dateParam = currentDate ? `&date=${currentDate}` : "";
+      const limit = currentDate ? 50 : 10;
       const response = await fetch(
-        `${API_BASE_URL}/api/analytics/sessions?page=${currentPage}&limit=10&type=${currentFilter}`,
+        `${API_BASE_URL}/api/analytics/sessions?page=${currentPage}&limit=${limit}&type=${currentFilter}${dateParam}`,
         { 
           credentials: "include",
           headers: {
@@ -47,8 +87,22 @@ export default function AdminAnalyticsPage() {
       );
       const data = await response.json();
       if (data.success) {
-        setSessions(data.sessions || []);
+        let list = data.sessions || [];
+        // If viewing a particular day, ensure chronological order: morning to evening
+        if (currentDate) {
+          list = [...list].sort(
+            (a, b) =>
+              new Date(a.createdAt || a.startedAt) -
+              new Date(b.createdAt || b.startedAt)
+          );
+        }
+        setSessions(list);
         setTotalPages(data.pagination?.pages || 1);
+        setTotalRecords(data.pagination?.total !== undefined ? data.pagination.total : list.length);
+      } else {
+        setSessions([]);
+        setTotalPages(1);
+        setTotalRecords(0);
       }
     } catch (err) {
       console.error("Failed to load admin sessions:", err);
@@ -64,6 +118,10 @@ export default function AdminAnalyticsPage() {
     if (urlFilter && ["all", "auth", "anon"].includes(urlFilter)) {
       setFilterType(urlFilter);
     }
+    const urlDate = params.get("date");
+    if (urlDate) {
+      setSelectedDate(urlDate);
+    }
     const urlSession = params.get("session");
     if (urlSession) {
       fetchSingleSession(urlSession);
@@ -76,6 +134,8 @@ export default function AdminAnalyticsPage() {
       const params = new URLSearchParams(window.location.search);
       const urlFilter = params.get("sessionFilter") || "all";
       setFilterType(urlFilter);
+      const urlDate = params.get("date") || "";
+      setSelectedDate(urlDate);
       
       const urlSession = params.get("session");
       if (urlSession) {
@@ -91,8 +151,8 @@ export default function AdminAnalyticsPage() {
   }, [selectedSession]);
 
   useEffect(() => {
-    fetchSessions(page, filterType);
-  }, [page, filterType]);
+    fetchSessions(page, filterType, selectedDate);
+  }, [page, filterType, selectedDate]);
 
   // Smooth scroll to visualizer on mobile when a session is selected
   useEffect(() => {
@@ -116,6 +176,26 @@ export default function AdminAnalyticsPage() {
     url.searchParams.set("sessionFilter", type);
     url.searchParams.delete("session");
     window.history.pushState({}, "", url.toString());
+  };
+
+  const handleDateSelect = (ymd) => {
+    setSelectedDate(ymd);
+    setPage(1);
+    setSelectedSession(null);
+
+    // Update URL query parameters
+    const url = new URL(window.location.href);
+    if (ymd) {
+      url.searchParams.set("date", ymd);
+    } else {
+      url.searchParams.delete("date");
+    }
+    url.searchParams.delete("session");
+    window.history.pushState({}, "", url.toString());
+  };
+
+  const handleClearDate = () => {
+    handleDateSelect("");
   };
 
   const handleSessionClick = (session) => {
@@ -163,7 +243,7 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div className="analytics-container">
-      {/* 🚀 Header */}
+      {/* Header */}
       <header className="analytics-header">
         <div className="header-info">
           <h1>User Flow Journey & Interactions</h1>
@@ -174,31 +254,115 @@ export default function AdminAnalyticsPage() {
             className={`filter-btn ${filterType === "all" ? "active" : ""}`}
             onClick={() => handleFilterChange("all")}
           >
-            👥 All Visitors
+            <FiUsers size={14} /> All Visitors
+            {filterType === "all" && <span className="btn-count-chip">{totalRecords}</span>}
           </button>
           <button 
             className={`filter-btn ${filterType === "auth" ? "active" : ""}`}
             onClick={() => handleFilterChange("auth")}
           >
-            🔑 Logged In Only
+            <FiUserCheck size={14} /> Logged In
+            {filterType === "auth" && <span className="btn-count-chip">{totalRecords}</span>}
           </button>
           <button 
             className={`filter-btn ${filterType === "anon" ? "active" : ""}`}
             onClick={() => handleFilterChange("anon")}
           >
-            🕵️ Anonymous Guests
+            <FiUserX size={14} /> Anonymous
+            {filterType === "anon" && <span className="btn-count-chip">{totalRecords}</span>}
           </button>
         </div>
       </header>
 
-      {/* 🧩 Dashboard Body */}
+      {/* Round-Border Day Filter Strip */}
+      <div className="date-strip-container">
+        <div className="date-strip-days">
+          <button
+            type="button"
+            className={`round-day-pill ${!selectedDate ? "round-day-pill--active" : ""}`}
+            onClick={handleClearDate}
+          >
+            <span className="pill-dot">●</span>
+            All Days
+          </button>
+
+          {recentDays.map((d) => {
+            const isSelected = selectedDate === d.ymd;
+            return (
+              <button
+                key={d.ymd}
+                type="button"
+                className={`round-day-pill ${isSelected ? "round-day-pill--active" : ""}`}
+                onClick={() => handleDateSelect(d.ymd)}
+              >
+                <span className="pill-day-name">{d.dayName}</span>
+                <span className="pill-day-num">{d.dayNum} {d.monthName}</span>
+              </button>
+            );
+          })}
+        </div>
+
+        <div className="date-strip-custom">
+          {/* Round custom date picker */}
+          <div className={`round-picker-wrap ${selectedDate && !recentDays.some(r => r.ymd === selectedDate) ? "round-picker-wrap--active" : ""}`}>
+            <span className="picker-icon"><FiCalendar size={14} /></span>
+            <input
+              type="date"
+              value={selectedDate}
+              onChange={(e) => handleDateSelect(e.target.value)}
+              className="round-date-input"
+              title="Pick any specific day"
+            />
+          </div>
+
+          {selectedDate && (
+            <button
+              type="button"
+              onClick={handleClearDate}
+              className="round-clear-btn"
+              title="Clear selected date"
+            >
+              <FiX size={13} /> Clear Date
+            </button>
+          )}
+
+          <div className="date-count-pill" title="Total matching records for selected filter/date">
+            <FiDatabase size={12} />
+            <span>{totalRecords} {totalRecords === 1 ? "Record" : "Records"}</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Dashboard Body */}
       <main className="analytics-body">
         
-        {/* 📋 Left Panel: Session Stream */}
+        {/* Left Panel: Session Stream */}
         <section className="session-panel">
           <div className="panel-title">
-            <h2>Recent Activity Sessions</h2>
-            <span className="live-indicator">LIVE</span>
+            <div className="panel-title-text">
+              <div className="panel-heading-row">
+                <h2>
+                  {selectedDate
+                    ? `Activity for ${formatDate(selectedDate)}`
+                    : "Recent Activity Sessions"}
+                </h2>
+                <span className="records-count-chip">
+                  <FiFilter size={11} /> {totalRecords} {totalRecords === 1 ? "Record" : "Records"}
+                </span>
+              </div>
+              {selectedDate ? (
+                <span className="morning-evening-hint">
+                  <FiSun size={13} /> Morning to Evening order ({totalRecords} {totalRecords === 1 ? "visit recorded" : "visits recorded"})
+                </span>
+              ) : (
+                <span className="morning-evening-hint">
+                  Live visitor sessions • {totalRecords} {totalRecords === 1 ? "record found" : "records found"}
+                </span>
+              )}
+            </div>
+            <span className={`live-indicator ${selectedDate ? "filtered-indicator" : ""}`}>
+              {selectedDate ? "FILTERED" : "LIVE"}
+            </span>
           </div>
 
           {loading && sessions.length === 0 ? (
@@ -208,11 +372,16 @@ export default function AdminAnalyticsPage() {
             </div>
           ) : sessions.length === 0 ? (
             <div className="empty-state">
-              <p>No active sessions found matching this filter.</p>
+              <FiFilter size={30} style={{ opacity: 0.5, marginBottom: "8px" }} />
+              <p>
+                {selectedDate
+                  ? `No active sessions found for ${formatDate(selectedDate)} (0 records).`
+                  : "No active sessions found matching this filter (0 records)."}
+              </p>
             </div>
           ) : (
             <div className="sessions-list">
-              {sessions.map((session) => {
+              {sessions.map((session, index) => {
                 const isSelected = selectedSession?.sessionId === session.sessionId;
                 const isAuth = !!session.userId;
                 return (
@@ -237,7 +406,7 @@ export default function AdminAnalyticsPage() {
                           </>
                         ) : (
                           <>
-                            <div className="guest-avatar">🕵️</div>
+                            <div className="guest-avatar"><FiUser size={18} /></div>
                             <div className="user-details">
                               <span className="guest-name">Guest Browser</span>
                               <span className="guest-id">ID: ...{session.deviceId.slice(-8)}</span>
@@ -245,15 +414,22 @@ export default function AdminAnalyticsPage() {
                           </>
                         )}
                       </div>
-                      <span className={`badge ${isAuth ? "badge-auth" : "badge-anon"}`}>
-                        {isAuth ? "Registered" : "Guest"}
-                      </span>
+                      <div className="card-top-right">
+                        {selectedDate && (
+                          <span className="chrono-badge">
+                            #{index + 1} • {formatTime(session.startedAt || session.createdAt)}
+                          </span>
+                        )}
+                        <span className={`badge ${isAuth ? "badge-auth" : "badge-anon"}`}>
+                          {isAuth ? "Registered" : "Guest"}
+                        </span>
+                      </div>
                     </div>
 
                     <div className="card-meta">
-                      <span className="meta-item">⏱️ {formatDuration(session.totalDuration)}</span>
-                      <span className="meta-item">🌐 {getBrowserName(session.userAgent)}</span>
-                      <span className="meta-item">🎯 {session.events?.length || 0} events</span>
+                      <span className="meta-item"><FiClock size={12} /> {formatDuration(session.totalDuration)}</span>
+                      <span className="meta-item"><FiGlobe size={12} /> {getBrowserName(session.userAgent)}</span>
+                      <span className="meta-item"><FiActivity size={12} /> {session.events?.length || 0} events</span>
                     </div>
 
                     <div className="card-footer">
@@ -265,27 +441,29 @@ export default function AdminAnalyticsPage() {
             </div>
           )}
 
-          {/* 🔘 Pagination */}
+          {/* Pagination */}
           <div className="pagination">
             <button 
               disabled={page <= 1 || loading}
               onClick={() => setPage(page - 1)}
               className="page-btn"
             >
-              ◀ Prev
+              <FiChevronLeft size={14} /> Prev
             </button>
-            <span className="page-info">Page {page} of {totalPages}</span>
+            <span className="page-info">
+              Showing {sessions.length} of {totalRecords} {totalRecords === 1 ? "record" : "records"} • Page {page} of {totalPages}
+            </span>
             <button 
               disabled={page >= totalPages || loading}
               onClick={() => setPage(page + 1)}
               className="page-btn"
             >
-              Next ▶
+              Next <FiChevronRight size={14} />
             </button>
           </div>
         </section>
 
-        {/* 🧭 Right Panel: Flow Visualizer */}
+        {/* Right Panel: Flow Visualizer */}
         <section className="visualizer-panel">
           {selectedSession ? (
             <div className="timeline-container">
@@ -342,7 +520,7 @@ export default function AdminAnalyticsPage() {
                           <div className="node-connector">
                             <div className="connector-line"></div>
                             <div className="node-icon">
-                              {isNav ? "🧭" : "🖱️"}
+                              {isNav ? <FiNavigation size={13} /> : <FiMousePointer size={13} />}
                             </div>
                           </div>
 
@@ -353,7 +531,7 @@ export default function AdminAnalyticsPage() {
                                 <div className="card-header">
                                   <span className="action-type-badge nav-badge">Page View</span>
                                   {event.duration > 0 && (
-                                    <span className="duration-tag">⏱️ Spent {formatDuration(event.duration)}</span>
+                                    <span className="duration-tag"><FiClock size={11} /> Spent {formatDuration(event.duration)}</span>
                                   )}
                                 </div>
                                 <div className="card-body">
@@ -375,7 +553,7 @@ export default function AdminAnalyticsPage() {
                             {/* Milestone Marker for login transitions */}
                             {event.label === "Login with Google" && (
                               <div className="milestone-badge">
-                                🔑 <span>Initiated Smart Redirect Authentication flow</span>
+                                <FiKey size={13} /> <span>Initiated Smart Redirect Authentication flow</span>
                               </div>
                             )}
                           </div>
@@ -408,7 +586,7 @@ export default function AdminAnalyticsPage() {
               <div className="pulsing-radar">
                 <div className="ring ring-1"></div>
                 <div className="ring ring-2"></div>
-                <div className="radar-icon">🌿</div>
+                <div className="radar-icon"><MdSpa size={36} color="#4ade80" /></div>
               </div>
               <h3>Select a Visitor Session</h3>
               <p>Explore real-time user flow trees, page timing sequences, and action timelines.</p>
@@ -418,23 +596,26 @@ export default function AdminAnalyticsPage() {
 
       </main>
 
-      {/* 🎨 CSS Styles Block (Premium Glassmorphic Design System) */}
+      {/* CSS Styles Block (Premium Glassmorphic Design System) */}
       <style jsx global>{`
         .analytics-container {
           background: #0b1511;
           background: radial-gradient(circle at top right, #112d20 0%, #070d0a 70%);
-          min-height: 100vh;
-          padding: 2.5rem;
+          min-height: calc(100vh - 85px);
+          padding: 12px 16px;
           color: #e2f0e9;
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           display: flex;
           flex-direction: column;
-          gap: 2rem;
+          gap: 0.85rem;
+          border-radius: 14px;
+          border: 1px solid rgba(46, 117, 81, 0.15);
+          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
           --time-width: 80px;
           --connector-width: 40px;
         }
 
-        /* 🚀 Header styles */
+        /* Header styles */
         .analytics-header {
           display: flex;
           justify-content: space-between;
@@ -442,27 +623,27 @@ export default function AdminAnalyticsPage() {
           background: rgba(18, 38, 29, 0.45);
           backdrop-filter: blur(16px);
           border: 1px solid rgba(46, 117, 81, 0.2);
-          border-radius: 16px;
-          padding: 1.5rem 2rem;
-          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+          border-radius: 14px;
+          padding: 0.9rem 1.4rem;
+          box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
         }
         .header-info h1 {
-          font-size: 1.8rem;
+          font-size: 1.55rem;
           font-weight: 800;
           color: #4ade80;
-          margin: 0 0 0.4rem 0;
+          margin: 0 0 0.25rem 0;
           letter-spacing: -0.025em;
         }
         .header-info p {
           color: #92bfa6;
           margin: 0;
-          font-size: 0.95rem;
+          font-size: 0.88rem;
         }
         .analytics-filters {
           display: flex;
-          gap: 0.75rem;
+          gap: 0.6rem;
           background: rgba(0, 0, 0, 0.3);
-          padding: 0.4rem;
+          padding: 0.35rem;
           border-radius: 12px;
           border: 1px solid rgba(46, 117, 81, 0.15);
         }
@@ -470,15 +651,15 @@ export default function AdminAnalyticsPage() {
           background: transparent;
           border: none;
           color: #92bfa6;
-          padding: 0.6rem 1.1rem;
+          padding: 0.5rem 1rem;
           border-radius: 8px;
           font-weight: 600;
-          font-size: 0.85rem;
+          font-size: 0.82rem;
           cursor: pointer;
           transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           align-items: center;
-          gap: 0.5rem;
+          gap: 0.45rem;
         }
         .filter-btn:hover {
           color: #4ade80;
@@ -489,17 +670,235 @@ export default function AdminAnalyticsPage() {
           color: #ffffff;
           box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
         }
+        .btn-count-chip {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          background: rgba(255, 255, 255, 0.22);
+          color: #ffffff;
+          padding: 1px 7px;
+          border-radius: 9999px;
+          font-size: 0.72rem;
+          font-weight: 700;
+          margin-left: 4px;
+        }
 
-        /* 🧩 Body Layout */
+        /* Round-Border Day Filter Strip */
+        .date-strip-container {
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          flex-wrap: wrap;
+          gap: 10px;
+          background: rgba(18, 38, 29, 0.35);
+          backdrop-filter: blur(12px);
+          border: 1px solid rgba(46, 117, 81, 0.18);
+          border-radius: 9999px;
+          padding: 7px 14px;
+          box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
+        }
+
+        .date-strip-days {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+          flex-wrap: wrap;
+        }
+
+        .round-day-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 6px 14px;
+          border-radius: 9999px;
+          border: 1.5px solid rgba(46, 117, 81, 0.25);
+          background: rgba(0, 0, 0, 0.35);
+          color: #92bfa6;
+          font-size: 0.8rem;
+          font-weight: 600;
+          cursor: pointer;
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+          white-space: nowrap;
+        }
+
+        .round-day-pill:hover {
+          color: #4ade80;
+          border-color: rgba(74, 222, 128, 0.4);
+          background: rgba(46, 117, 81, 0.15);
+        }
+
+        .round-day-pill--active {
+          background: #10b981 !important;
+          color: #ffffff !important;
+          border-color: #34d399 !important;
+          box-shadow: 0 2px 12px rgba(16, 185, 129, 0.45);
+        }
+
+        .pill-dot {
+          font-size: 0.65rem;
+          color: #34d399;
+        }
+
+        .pill-day-name {
+          font-weight: 700;
+        }
+
+        .pill-day-num {
+          font-size: 0.72rem;
+          opacity: 0.85;
+        }
+
+        .date-strip-custom {
+          display: flex;
+          align-items: center;
+          gap: 8px;
+        }
+
+        .round-picker-wrap {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          background: rgba(0, 0, 0, 0.35);
+          border: 1.5px solid rgba(46, 117, 81, 0.25);
+          border-radius: 9999px;
+          padding: 4px 12px;
+          transition: all 0.2s;
+        }
+
+        .round-picker-wrap:hover,
+        .round-picker-wrap:focus-within {
+          border-color: #4ade80;
+          box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+        }
+
+        .round-picker-wrap--active {
+          border-color: #34d399;
+          background: rgba(16, 185, 129, 0.2);
+        }
+
+        .picker-icon {
+          display: inline-flex;
+          align-items: center;
+          justify-content: center;
+          color: #92bfa6;
+          font-size: 0.85rem;
+        }
+
+        .round-date-input {
+          background: transparent;
+          border: none;
+          color: #e2f0e9;
+          font-size: 0.8rem;
+          font-family: inherit;
+          outline: none;
+          cursor: pointer;
+          color-scheme: dark;
+        }
+
+        .round-clear-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
+          padding: 5px 12px;
+          border-radius: 9999px;
+          border: 1px solid rgba(239, 68, 68, 0.3);
+          background: rgba(239, 68, 68, 0.15);
+          color: #f87171;
+          font-size: 0.75rem;
+          font-weight: 700;
+          cursor: pointer;
+          transition: all 0.2s;
+        }
+
+        .round-clear-btn:hover {
+          background: #ef4444;
+          color: #fff;
+        }
+
+        .date-count-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 6px;
+          padding: 5px 12px;
+          border-radius: 9999px;
+          background: rgba(16, 185, 129, 0.15);
+          border: 1px solid rgba(16, 185, 129, 0.3);
+          color: #34d399;
+          font-size: 0.78rem;
+          font-weight: 700;
+          white-space: nowrap;
+        }
+
+        .panel-title-text {
+          display: flex;
+          flex-direction: column;
+          gap: 3px;
+        }
+
+        .panel-heading-row {
+          display: flex;
+          align-items: center;
+          gap: 10px;
+          flex-wrap: wrap;
+        }
+
+        .records-count-chip {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          padding: 2px 10px;
+          border-radius: 9999px;
+          background: rgba(52, 211, 153, 0.15);
+          border: 1px solid rgba(52, 211, 153, 0.3);
+          color: #4ade80;
+          font-size: 0.75rem;
+          font-weight: 700;
+        }
+
+        .morning-evening-hint {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
+          font-size: 0.72rem;
+          color: #34d399;
+          font-weight: 600;
+        }
+
+        .filtered-indicator {
+          background: rgba(52, 211, 153, 0.2) !important;
+          color: #34d399 !important;
+          border-color: rgba(52, 211, 153, 0.4) !important;
+          animation: none !important;
+        }
+
+        .card-top-right {
+          display: flex;
+          align-items: center;
+          gap: 6px;
+        }
+
+        .chrono-badge {
+          font-size: 0.68rem;
+          font-weight: 700;
+          color: #34d399;
+          background: rgba(52, 211, 153, 0.12);
+          border: 1px solid rgba(52, 211, 153, 0.25);
+          padding: 2px 7px;
+          border-radius: 9999px;
+          font-family: monospace;
+          white-space: nowrap;
+        }
+
+        /* Body Layout */
         .analytics-body {
           display: grid;
           grid-template-columns: 380px 1fr;
-          gap: 2rem;
-          height: calc(100vh - 180px);
+          gap: 1rem;
+          height: calc(100vh - 225px);
           min-height: 500px;
         }
 
-        /* 📋 Left Panel Stream */
+        /* Left Panel Stream */
         .session-panel {
           background: rgba(18, 38, 29, 0.35);
           backdrop-filter: blur(12px);
@@ -659,6 +1058,9 @@ export default function AdminAnalyticsPage() {
           gap: 0.75rem;
         }
         .meta-item {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
           font-size: 0.75rem;
           color: #92bfa6;
           background: rgba(0, 0, 0, 0.25);
@@ -684,6 +1086,9 @@ export default function AdminAnalyticsPage() {
           background: rgba(0,0,0,0.15);
         }
         .page-btn {
+          display: inline-flex;
+          align-items: center;
+          gap: 5px;
           background: rgba(46, 117, 81, 0.15);
           color: #92bfa6;
           border: 1px solid rgba(46, 117, 81, 0.25);
@@ -707,7 +1112,7 @@ export default function AdminAnalyticsPage() {
           color: #92bfa6;
         }
 
-        /* 🧭 Right Panel Flow Visualizer */
+        /* Right Panel Flow Visualizer */
         .visualizer-panel {
           background: rgba(18, 38, 29, 0.25);
           backdrop-filter: blur(12px);
@@ -740,7 +1145,9 @@ export default function AdminAnalyticsPage() {
           margin-bottom: 1.5rem;
         }
         .radar-icon {
-          font-size: 2.2rem;
+          display: flex;
+          align-items: center;
+          justify-content: center;
           z-index: 2;
         }
         .ring {
@@ -989,6 +1396,9 @@ export default function AdminAnalyticsPage() {
           color: #fbbf24;
         }
         .duration-tag {
+          display: inline-flex;
+          align-items: center;
+          gap: 4px;
           font-size: 0.75rem;
           color: #4ade80;
           font-weight: 600;
@@ -1073,7 +1483,7 @@ export default function AdminAnalyticsPage() {
         }
 
         /* ==========================================================================
-           📱 PREMIUM RESPONSIVE MEDIA QUERIES (WOW FACTOR SCREEN ADAPTIVITY)
+           RESPONSIVE MEDIA QUERIES
            ========================================================================= */
 
         @media (max-width: 1024px) {

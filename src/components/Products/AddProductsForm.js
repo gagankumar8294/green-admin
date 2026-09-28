@@ -8,6 +8,7 @@ import {
   FiPackage, FiImage, FiSliders, FiTag, FiEdit2,
   FiTrash2, FiRefreshCw, FiAlertCircle, FiLoader, FiCheck,
 } from "react-icons/fi";
+import CustomDropdown from "@/components/Shared/CustomDropdown";
 
 const CATEGORY_OPTIONS = [
   "Uncategorized",
@@ -34,6 +35,11 @@ const CATEGORY_OPTIONS = [
   "succulents",
   "Trees and Landscaping Services",
   "Vastu Plants",
+];
+
+const ALL_CATEGORY_DROPDOWN_OPTIONS = [
+  { value: "All", label: "All Categories" },
+  ...CATEGORY_OPTIONS.map((cat) => ({ value: cat, label: cat })),
 ];
 
 export default function AddProductForm() {
@@ -675,18 +681,12 @@ export default function AddProductForm() {
           onChange={(e) => setSearchQuery(e.target.value)}
           className={styles.searchInput}
         />
-        <select
+        <CustomDropdown
           value={selectedCategory}
-          onChange={(e) => setSelectedCategory(e.target.value)}
-          className={styles.categorySelect}
-        >
-          <option value="All">All Categories</option>
-          {CATEGORY_OPTIONS.map((cat) => (
-            <option key={cat} value={cat}>
-              {cat}
-            </option>
-          ))}
-        </select>
+          options={ALL_CATEGORY_DROPDOWN_OPTIONS}
+          onChange={(e) => setSelectedCategory(e?.target ? e.target.value : e)}
+          style={{ flex: 1, minWidth: "180px" }}
+        />
       </div>
 
       {loadingProducts ? (

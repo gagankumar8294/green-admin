@@ -3,6 +3,7 @@
 import { useState, useMemo } from "react";
 import { FiEdit, FiTrash2, FiRefreshCw } from "react-icons/fi";
 import styles from "./Blogs.module.css";
+import CustomDropdown from "@/components/Shared/CustomDropdown";
 
 const ALL_CATEGORIES = [
   "flower-crops",
@@ -16,6 +17,27 @@ const ALL_CATEGORIES = [
   "outdoor-plants",
   "plant-care",
   "soil-and-fertilizers"
+];
+
+const CATEGORY_OPTIONS = [
+  { value: "ALL", label: "All Categories" },
+  ...ALL_CATEGORIES.map((cat) => ({
+    value: cat,
+    label: cat.replace(/-/g, " "),
+  })),
+];
+
+const STATUS_OPTIONS = [
+  { value: "ALL", label: "All Statuses" },
+  { value: "published", label: "Published" },
+  { value: "draft", label: "Draft" },
+];
+
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest First" },
+  { value: "oldest", label: "Oldest First" },
+  { value: "title-asc", label: "Title: A-Z" },
+  { value: "title-desc", label: "Title: Z-A" },
 ];
 
 export default function BlogForm({
@@ -199,47 +221,31 @@ export default function BlogForm({
         <div className={styles.filterGroup}>
           <div className={styles.filterControl}>
             <label>Category</label>
-            <select
+            <CustomDropdown
               value={categoryFilter}
-              onChange={(e) => setCategoryFilter(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="ALL">All Categories</option>
-              {ALL_CATEGORIES.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat.replace("-", " ")}
-                </option>
-              ))}
-            </select>
+              options={CATEGORY_OPTIONS}
+              onChange={(e) => setCategoryFilter(e?.target ? e.target.value : e)}
+            />
           </div>
 
           {viewMode === "active" && (
             <div className={styles.filterControl}>
               <label>Status</label>
-              <select
+              <CustomDropdown
                 value={statusFilter}
-                onChange={(e) => setStatusFilter(e.target.value)}
-                className={styles.selectInput}
-              >
-                <option value="ALL">All Statuses</option>
-                <option value="published">Published</option>
-                <option value="draft">Draft</option>
-              </select>
+                options={STATUS_OPTIONS}
+                onChange={(e) => setStatusFilter(e?.target ? e.target.value : e)}
+              />
             </div>
           )}
 
           <div className={styles.filterControl}>
             <label>Sort By</label>
-            <select
+            <CustomDropdown
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="newest">Newest First</option>
-              <option value="oldest">Oldest First</option>
-              <option value="title-asc">Title: A-Z</option>
-              <option value="title-desc">Title: Z-A</option>
-            </select>
+              options={SORT_OPTIONS}
+              onChange={(e) => setSortBy(e?.target ? e.target.value : e)}
+            />
           </div>
         </div>
       </div>

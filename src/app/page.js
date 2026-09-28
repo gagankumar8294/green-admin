@@ -782,7 +782,7 @@ export default function AdminPortal() {
         </header>
 
         {/* Page body */}
-        <div className="main-body">
+        <div className={`main-body ${activeTab === "sessions" ? "main-body--sessions" : ""}`}>
           {tabLoading ? (
             <div className="tab-loading-wrap">
               <div className="tab-spinner" />
@@ -1132,6 +1132,9 @@ export default function AdminPortal() {
           flex: 1;
           padding: 28px;
           overflow-y: auto;
+        }
+        .main-body--sessions {
+          padding: 8px 12px;
         }
 
         /* ══════ RESPONSIVE ══════ */

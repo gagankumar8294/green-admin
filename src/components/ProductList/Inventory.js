@@ -3,6 +3,36 @@ import React, { useState, useEffect, useMemo } from "react";
 import ReactMarkdown from "react-markdown";
 import styles from "../ProductList/Inventory.module.css";
 import { API_BASE_URL } from "@/config/api";
+import CustomDropdown from "@/components/Shared/CustomDropdown";
+
+const STOCK_STATUS_OPTIONS = [
+  { value: "All", label: "All Statuses" },
+  { value: "inStock", label: "In Stock" },
+  { value: "outOfStock", label: "Out of Stock" },
+];
+
+const SORT_OPTIONS = [
+  { value: "date-newest", label: "Date: Newest First" },
+  { value: "date-oldest", label: "Date: Oldest First" },
+  { value: "name-asc", label: "Name: A to Z" },
+  { value: "name-desc", label: "Name: Z to A" },
+  { value: "price-asc", label: "Price: Low to High" },
+  { value: "price-desc", label: "Price: High to Low" },
+  { value: "qty-asc", label: "Quantity: Low to High" },
+  { value: "qty-desc", label: "Quantity: High to Low" },
+];
+
+const PAGE_SIZE_OPTIONS = [
+  { value: 5, label: "5" },
+  { value: 10, label: "10" },
+  { value: 20, label: "20" },
+  { value: 50, label: "50" },
+];
+
+const ROW_STATUS_OPTIONS = [
+  { value: "public", label: "Public" },
+  { value: "draft", label: "Draft" },
+];
 
 export default function Inventory() {
   const [products, setProducts] = useState([]);
@@ -435,49 +465,32 @@ export default function Inventory() {
         <div className={styles.filtersGroup}>
           <div className={styles.filterControl}>
             <label>Category</label>
-            <select
+            <CustomDropdown
               value={selectedCategory}
-              onChange={(e) => setSelectedCategory(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="All">All Categories</option>
-              {allCategories.map((cat) => (
-                <option key={cat} value={cat}>
-                  {cat}
-                </option>
-              ))}
-            </select>
+              options={[
+                { value: "All", label: "All Categories" },
+                ...allCategories.map((cat) => ({ value: cat, label: cat })),
+              ]}
+              onChange={(e) => setSelectedCategory(e?.target ? e.target.value : e)}
+            />
           </div>
 
           <div className={styles.filterControl}>
             <label>Stock Status</label>
-            <select
+            <CustomDropdown
               value={stockStatus}
-              onChange={(e) => setStockStatus(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="All">All Statuses</option>
-              <option value="inStock">In Stock</option>
-              <option value="outOfStock">Out of Stock</option>
-            </select>
+              options={STOCK_STATUS_OPTIONS}
+              onChange={(e) => setStockStatus(e?.target ? e.target.value : e)}
+            />
           </div>
 
           <div className={styles.filterControl}>
             <label>Sort By</label>
-            <select
+            <CustomDropdown
               value={sortBy}
-              onChange={(e) => setSortBy(e.target.value)}
-              className={styles.selectInput}
-            >
-              <option value="date-newest">Date: Newest First</option>
-              <option value="date-oldest">Date: Oldest First</option>
-              <option value="name-asc">Name: A to Z</option>
-              <option value="name-desc">Name: Z to A</option>
-              <option value="price-asc">Price: Low to High</option>
-              <option value="price-desc">Price: High to Low</option>
-              <option value="qty-asc">Quantity: Low to High</option>
-              <option value="qty-desc">Quantity: High to Low</option>
-            </select>
+              options={SORT_OPTIONS}
+              onChange={(e) => setSortBy(e?.target ? e.target.value : e)}
+            />
           </div>
         </div>
       </div>
@@ -502,16 +515,13 @@ export default function Inventory() {
 
         <div className={styles.pageSizeSelector}>
           <label>Show</label>
-          <select
+          <CustomDropdown
             value={itemsPerPage}
-            onChange={(e) => setItemsPerPage(Number(e.target.value))}
-            className={styles.selectPageSize}
-          >
-            <option value={5}>5</option>
-            <option value={10}>10</option>
-            <option value={20}>20</option>
-            <option value={50}>50</option>
-          </select>
+            options={PAGE_SIZE_OPTIONS}
+            onChange={(e) => setItemsPerPage(Number(e?.target ? e.target.value : e))}
+            size="sm"
+            showIcon={false}
+          />
           <span>per page</span>
         </div>
       </div>
@@ -595,15 +605,14 @@ export default function Inventory() {
                       </td>
 
                       <td data-label="Status">
-                        <select
+                        <CustomDropdown
                           name="status"
                           value={formData.status || "public"}
+                          options={ROW_STATUS_OPTIONS}
                           onChange={handleChange}
-                          className={styles.selectInput}
-                        >
-                          <option value="public">Public</option>
-                          <option value="draft">Draft</option>
-                        </select>
+                          size="sm"
+                          showIcon={false}
+                        />
                       </td>
 
                       <td data-label="Weight">
