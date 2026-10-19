@@ -20,8 +20,34 @@ import {
   FiKey,
   FiDatabase,
   FiFilter,
+  FiWifi,
 } from "react-icons/fi";
 import { MdSpa } from "react-icons/md";
+
+// Helper to resolve clean, human-friendly page titles
+const getPageFriendlyName = (path, title) => {
+  if (title && title.trim()) return title.trim();
+  if (!path || path === "/") return "Home Page";
+  if (path === "/shop") return "Shop Catalog";
+  if (path === "/blog") return "Blog Listing";
+  if (path === "/about-us") return "About Us";
+  if (path === "/contact-us") return "Contact Us";
+  if (path === "/cart") return "Shopping Cart";
+  if (path === "/my-orders") return "My Orders";
+  if (path === "/privacy-policy") return "Privacy Policy";
+  if (path === "/refund-returns") return "Refund & Returns";
+  if (path === "/shipping-policy") return "Shipping Policy";
+  if (path === "/terms-of-service") return "Terms of Service";
+  if (path.startsWith("/blog/")) {
+    const slug = path.replace("/blog/", "").replace(/-/g, " ");
+    return `Blog: ${slug}`;
+  }
+  if (path.startsWith("/shop/")) {
+    const slug = path.replace("/shop/", "").replace(/-/g, " ");
+    return `Product: ${slug}`;
+  }
+  return path;
+};
 
 export default function AdminAnalyticsPage() {
   const [sessions, setSessions] = useState([]);
@@ -429,6 +455,11 @@ export default function AdminAnalyticsPage() {
                     <div className="card-meta">
                       <span className="meta-item"><FiClock size={12} /> {formatDuration(session.totalDuration)}</span>
                       <span className="meta-item"><FiGlobe size={12} /> {getBrowserName(session.userAgent)}</span>
+                      {session.ip && (
+                        <span className="meta-item ip-meta" title={`Visitor IP: ${session.ip}`}>
+                          <FiWifi size={11} /> {session.ip}
+                        </span>
+                      )}
                       <span className="meta-item"><FiActivity size={12} /> {session.events?.length || 0} events</span>
                     </div>
 
@@ -472,7 +503,14 @@ export default function AdminAnalyticsPage() {
               <div className="timeline-header">
                 <div className="timeline-title-area">
                   <h3>Session Journey Flow</h3>
-                  <span className="timeline-session-id">Session: {selectedSession.sessionId}</span>
+                  <div className="timeline-session-meta-row">
+                    <span className="timeline-session-id">Session: {selectedSession.sessionId}</span>
+                    {selectedSession.ip && (
+                      <span className="timeline-ip-pill" title={`Visitor IP Address: ${selectedSession.ip}`}>
+                        <FiWifi size={11} /> IP: {selectedSession.ip}
+                      </span>
+                    )}
+                  </div>
                 </div>
                 <div className="timeline-summary-metrics">
                   <div className="metric">
@@ -535,7 +573,8 @@ export default function AdminAnalyticsPage() {
                                   )}
                                 </div>
                                 <div className="card-body">
-                                  <p className="route-path">{event.path}</p>
+                                  <p className="route-title">{getPageFriendlyName(event.path, event.title)}</p>
+                                  <span className="route-path-sub">{event.path}</span>
                                 </div>
                               </>
                             ) : (
@@ -1068,6 +1107,11 @@ export default function AdminAnalyticsPage() {
           border-radius: 6px;
           border: 1px solid rgba(46, 117, 81, 0.1);
         }
+        .ip-meta {
+          color: #38bdf8;
+          border-color: rgba(56, 189, 248, 0.25);
+          background: rgba(56, 189, 248, 0.08);
+        }
         .card-footer {
           font-size: 0.7rem;
           color: #6d937d;
@@ -1221,6 +1265,24 @@ export default function AdminAnalyticsPage() {
           font-size: 0.75rem;
           color: #6d937d;
           font-family: monospace;
+        }
+        .timeline-session-meta-row {
+          display: flex;
+          align-items: center;
+          gap: 0.75rem;
+          flex-wrap: wrap;
+        }
+        .timeline-ip-pill {
+          display: inline-flex;
+          align-items: center;
+          gap: 0.35rem;
+          font-size: 0.75rem;
+          font-weight: 600;
+          color: #38bdf8;
+          background: rgba(56, 189, 248, 0.12);
+          border: 1px solid rgba(56, 189, 248, 0.25);
+          padding: 0.15rem 0.55rem;
+          border-radius: 6px;
         }
         .timeline-summary-metrics {
           display: flex;
@@ -1409,6 +1471,18 @@ export default function AdminAnalyticsPage() {
           color: #ffffff;
           font-family: monospace;
           margin: 0;
+          word-break: break-all;
+        }
+        .route-title {
+          font-size: 0.95rem;
+          font-weight: 700;
+          color: #4ade80;
+          margin: 0 0 0.15rem 0;
+        }
+        .route-path-sub {
+          font-size: 0.75rem;
+          color: #94a3b8;
+          font-family: monospace;
           word-break: break-all;
         }
         .click-label {

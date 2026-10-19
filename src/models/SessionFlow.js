@@ -3,6 +3,7 @@ import mongoose from "mongoose";
 const eventSchema = new mongoose.Schema({
   type: { type: String, enum: ["nav", "click"], required: true },
   path: { type: String, required: true },
+  title: { type: String, default: "" },
   label: { type: String, default: "" },
   duration: { type: Number, default: 0 },
   timestamp: { type: Date, default: Date.now }
@@ -14,6 +15,7 @@ const sessionFlowSchema = new mongoose.Schema(
     deviceId: { type: String, required: true, index: true },
     userId: { type: mongoose.Schema.Types.ObjectId, ref: "User", index: true, default: null },
     userAgent: { type: String, default: "" },
+    ip: { type: String, default: "" },
     totalDuration: { type: Number, default: 0 },
     startedAt: { type: Date, default: Date.now },
     events: [eventSchema]
