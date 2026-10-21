@@ -656,81 +656,80 @@ export default function AdminAnalyticsPage() {
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background: rgba(18, 38, 29, 0.45);
-          backdrop-filter: blur(16px);
-          border: 1px solid rgba(46, 117, 81, 0.2);
-          border-radius: 14px;
-          padding: 0.9rem 1.4rem;
+          background: var(--card-bg, #111827);
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          border-radius: 12px;
+          padding: 1rem 1.4rem;
           box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
         }
         .header-info h1 {
-          font-size: 1.55rem;
+          font-size: 1.75rem;
           font-weight: 800;
-          color: #4ade80;
+          color: var(--text, #f3f4f6);
           margin: 0 0 0.25rem 0;
-          letter-spacing: -0.025em;
+          letter-spacing: -0.02em;
         }
         .header-info p {
-          color: #92bfa6;
+          color: var(--text-muted, #9ca3af);
           margin: 0;
-          font-size: 0.88rem;
+          font-size: 0.9rem;
         }
         .analytics-filters {
           display: flex;
-          gap: 0.6rem;
-          background: rgba(0, 0, 0, 0.3);
+          gap: 0.5rem;
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
           padding: 0.35rem;
-          border-radius: 12px;
-          border: 1px solid rgba(46, 117, 81, 0.15);
+          border-radius: 8px;
+          border: 1px solid var(--border-color, rgba(255, 255, 255, 0.08));
         }
         .filter-btn {
           background: transparent;
-          border: none;
-          color: #92bfa6;
-          padding: 0.5rem 1rem;
-          border-radius: 8px;
+          border: 1px solid transparent;
+          color: var(--text-muted, #9ca3af);
+          padding: 0.45rem 0.9rem;
+          border-radius: 6px;
           font-weight: 600;
           font-size: 0.82rem;
           cursor: pointer;
-          transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+          transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
           display: flex;
           align-items: center;
           gap: 0.45rem;
         }
         .filter-btn:hover {
-          color: #4ade80;
-          background: rgba(46, 117, 81, 0.1);
+          color: var(--text, #f3f4f6);
+          background: var(--hover-bg, #1a2332);
         }
         .filter-btn.active {
-          background: #10b981;
-          color: #ffffff;
-          box-shadow: 0 4px 14px rgba(16, 185, 129, 0.4);
+          background: rgba(16, 185, 129, 0.2) !important;
+          color: #34d399 !important;
+          border-color: #10b981 !important;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.2);
         }
         .btn-count-chip {
           display: inline-flex;
           align-items: center;
           justify-content: center;
-          background: rgba(255, 255, 255, 0.22);
-          color: #ffffff;
+          background: rgba(16, 185, 129, 0.2);
+          color: #34d399;
           padding: 1px 7px;
-          border-radius: 9999px;
+          border-radius: 6px;
           font-size: 0.72rem;
           font-weight: 700;
           margin-left: 4px;
         }
 
-        /* Round-Border Day Filter Strip */
+        /* Square-Border Day Filter Strip */
         .date-strip-container {
           display: flex;
           align-items: center;
           justify-content: space-between;
           flex-wrap: wrap;
-          gap: 10px;
-          background: rgba(18, 38, 29, 0.35);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(46, 117, 81, 0.18);
-          border-radius: 9999px;
-          padding: 7px 14px;
+          gap: 12px;
+          background: var(--card-bg, #111827);
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          border-radius: 10px;
+          padding: 10px 14px;
           box-shadow: 0 4px 16px 0 rgba(0, 0, 0, 0.2);
         }
 
@@ -745,11 +744,11 @@ export default function AdminAnalyticsPage() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 6px 14px;
-          border-radius: 9999px;
-          border: 1.5px solid rgba(46, 117, 81, 0.25);
-          background: rgba(0, 0, 0, 0.35);
-          color: #92bfa6;
+          padding: 7px 12px;
+          border-radius: 8px;
+          border: 1px solid var(--input-border, rgba(255, 255, 255, 0.12));
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
+          color: var(--text-muted, #9ca3af);
           font-size: 0.8rem;
           font-weight: 600;
           cursor: pointer;
@@ -758,16 +757,16 @@ export default function AdminAnalyticsPage() {
         }
 
         .round-day-pill:hover {
-          color: #4ade80;
-          border-color: rgba(74, 222, 128, 0.4);
-          background: rgba(46, 117, 81, 0.15);
+          color: var(--text, #f3f4f6);
+          border-color: rgba(16, 185, 129, 0.4);
+          background: var(--hover-bg, #1a2332);
         }
 
         .round-day-pill--active {
-          background: #10b981 !important;
-          color: #ffffff !important;
-          border-color: #34d399 !important;
-          box-shadow: 0 2px 12px rgba(16, 185, 129, 0.45);
+          background: rgba(16, 185, 129, 0.22) !important;
+          color: #34d399 !important;
+          border-color: #10b981 !important;
+          box-shadow: 0 2px 8px rgba(16, 185, 129, 0.25);
         }
 
         .pill-dot {
@@ -794,22 +793,22 @@ export default function AdminAnalyticsPage() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          background: rgba(0, 0, 0, 0.35);
-          border: 1.5px solid rgba(46, 117, 81, 0.25);
-          border-radius: 9999px;
-          padding: 4px 12px;
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
+          border: 1px solid var(--input-border, rgba(255, 255, 255, 0.12));
+          border-radius: 8px;
+          padding: 5px 12px;
           transition: all 0.2s;
         }
 
         .round-picker-wrap:hover,
         .round-picker-wrap:focus-within {
-          border-color: #4ade80;
-          box-shadow: 0 0 0 3px rgba(74, 222, 128, 0.2);
+          border-color: #10b981;
+          box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
         }
 
         .round-picker-wrap--active {
-          border-color: #34d399;
-          background: rgba(16, 185, 129, 0.2);
+          border-color: #10b981;
+          background: rgba(16, 185, 129, 0.15);
         }
 
         .picker-icon {
@@ -850,8 +849,8 @@ export default function AdminAnalyticsPage() {
           display: inline-flex;
           align-items: center;
           gap: 4px;
-          padding: 5px 12px;
-          border-radius: 9999px;
+          padding: 6px 12px;
+          border-radius: 8px;
           border: 1px solid rgba(239, 68, 68, 0.3);
           background: rgba(239, 68, 68, 0.15);
           color: #f87171;
@@ -870,13 +869,13 @@ export default function AdminAnalyticsPage() {
           display: inline-flex;
           align-items: center;
           gap: 6px;
-          padding: 5px 12px;
-          border-radius: 9999px;
-          background: rgba(16, 185, 129, 0.15);
-          border: 1px solid rgba(16, 185, 129, 0.3);
-          color: #34d399;
+          padding: 6px 12px;
+          border-radius: 8px;
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
+          border: 1px solid var(--border-color, rgba(255, 255, 255, 0.1));
+          color: var(--text-muted, #9ca3af);
           font-size: 0.78rem;
-          font-weight: 700;
+          font-weight: 600;
           white-space: nowrap;
         }
 
@@ -898,9 +897,9 @@ export default function AdminAnalyticsPage() {
           align-items: center;
           gap: 5px;
           padding: 2px 10px;
-          border-radius: 9999px;
-          background: rgba(52, 211, 153, 0.15);
-          border: 1px solid rgba(52, 211, 153, 0.3);
+          border-radius: 6px;
+          background: rgba(16, 185, 129, 0.15);
+          border: 1px solid rgba(16, 185, 129, 0.3);
           color: #4ade80;
           font-size: 0.75rem;
           font-weight: 700;
@@ -935,7 +934,7 @@ export default function AdminAnalyticsPage() {
           background: rgba(52, 211, 153, 0.12);
           border: 1px solid rgba(52, 211, 153, 0.25);
           padding: 2px 7px;
-          border-radius: 9999px;
+          border-radius: 6px;
           font-family: monospace;
           white-space: nowrap;
         }
@@ -951,18 +950,22 @@ export default function AdminAnalyticsPage() {
 
         /* Left Panel Stream */
         .session-panel {
-          background: rgba(18, 38, 29, 0.35);
-          backdrop-filter: blur(12px);
-          border: 1px solid rgba(46, 117, 81, 0.15);
-          border-radius: 16px;
+          background: var(--card-bg, #111827);
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          border-radius: 12px;
           display: flex;
           flex-direction: column;
           box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
           overflow: hidden;
         }
         .panel-title {
-          padding: 1.25rem 1.5rem;
-          border-bottom: 1px solid rgba(46, 117, 81, 0.15);
+          padding: 1.1rem 1.4rem;
+          border-bottom: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          background: var(--sidebar-bg, #0d1117);
+          display: flex;
+          justify-content: space-between;
+          align-items: center;
+        }
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -1007,9 +1010,9 @@ export default function AdminAnalyticsPage() {
 
         /* Card styles */
         .session-card {
-          background: rgba(10, 20, 15, 0.5);
-          border: 1px solid rgba(46, 117, 81, 0.1);
-          border-radius: 12px;
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          border-radius: 10px;
           padding: 1rem;
           cursor: pointer;
           transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1);
@@ -1019,13 +1022,13 @@ export default function AdminAnalyticsPage() {
         }
         .session-card:hover {
           transform: translateY(-2px);
-          border-color: rgba(74, 222, 128, 0.4);
-          background: rgba(18, 38, 29, 0.5);
-          box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+          border-color: rgba(16, 185, 129, 0.4);
+          background: var(--hover-bg, #1a2332);
+          box-shadow: 0 4px 20px rgba(0,0,0,0.3);
         }
         .session-card.selected {
           border-color: #10b981;
-          background: rgba(16, 185, 129, 0.15);
+          background: rgba(16, 185, 129, 0.12);
           box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
         }
         .card-top {
@@ -1051,8 +1054,8 @@ export default function AdminAnalyticsPage() {
           width: 36px;
           height: 36px;
           border-radius: 50%;
-          background: rgba(46, 117, 81, 0.2);
-          border: 1px solid rgba(46, 117, 81, 0.3);
+          background: rgba(16, 185, 129, 0.12);
+          border: 1px solid rgba(16, 185, 129, 0.25);
           display: flex;
           align-items: center;
           justify-content: center;
@@ -1114,10 +1117,10 @@ export default function AdminAnalyticsPage() {
           gap: 5px;
           font-size: 0.75rem;
           color: #92bfa6;
-          background: rgba(0, 0, 0, 0.25);
+          background: var(--sidebar-bg, #0d1117);
           padding: 0.25rem 0.5rem;
           border-radius: 6px;
-          border: 1px solid rgba(46, 117, 81, 0.1);
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
         }
         .ip-meta {
           color: #38bdf8;
@@ -1128,26 +1131,26 @@ export default function AdminAnalyticsPage() {
           font-size: 0.7rem;
           color: #6d937d;
           text-align: right;
-          border-top: 1px solid rgba(46, 117, 81, 0.08);
+          border-top: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
           padding-top: 0.5rem;
         }
 
         /* Pagination style */
         .pagination {
           padding: 1rem;
-          border-top: 1px solid rgba(46, 117, 81, 0.15);
+          border-top: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
           display: flex;
           justify-content: space-between;
           align-items: center;
-          background: rgba(0,0,0,0.15);
+          background: var(--sidebar-bg, #0d1117);
         }
         .page-btn {
           display: inline-flex;
           align-items: center;
           gap: 5px;
-          background: rgba(46, 117, 81, 0.15);
-          color: #92bfa6;
-          border: 1px solid rgba(46, 117, 81, 0.25);
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
+          color: var(--text-muted, #9ca3af);
+          border: 1px solid var(--input-border, rgba(255, 255, 255, 0.12));
           padding: 0.4rem 0.8rem;
           border-radius: 8px;
           font-size: 0.8rem;
@@ -1156,8 +1159,9 @@ export default function AdminAnalyticsPage() {
           transition: all 0.2s;
         }
         .page-btn:hover:not(:disabled) {
-          background: rgba(46, 117, 81, 0.35);
-          color: #4ade80;
+          background: var(--hover-bg, #1a2332);
+          color: #34d399;
+          border-color: rgba(16, 185, 129, 0.4);
         }
         .page-btn:disabled {
           opacity: 0.4;
@@ -1170,10 +1174,10 @@ export default function AdminAnalyticsPage() {
 
         /* Right Panel Flow Visualizer */
         .visualizer-panel {
-          background: rgba(18, 38, 29, 0.25);
+          background: var(--card-bg, #111827);
           backdrop-filter: blur(12px);
-          border: 1px solid rgba(46, 117, 81, 0.15);
-          border-radius: 16px;
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          border-radius: 12px;
           box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
           overflow: hidden;
           position: relative;
@@ -1258,9 +1262,9 @@ export default function AdminAnalyticsPage() {
           overflow: hidden;
         }
         .timeline-header {
-          padding: 1.5rem 2rem;
-          border-bottom: 1px solid rgba(46, 117, 81, 0.15);
-          background: rgba(0,0,0,0.15);
+          padding: 1.25rem 1.75rem;
+          border-bottom: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          background: var(--sidebar-bg, #0d1117);
           display: flex;
           justify-content: space-between;
           align-items: center;
@@ -1304,10 +1308,10 @@ export default function AdminAnalyticsPage() {
           display: flex;
           flex-direction: column;
           align-items: center;
-          background: rgba(0,0,0,0.25);
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
           padding: 0.4rem 1rem;
           border-radius: 8px;
-          border: 1px solid rgba(46, 117, 81, 0.15);
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
           min-width: 90px;
         }
         .metric-val {
@@ -1332,8 +1336,8 @@ export default function AdminAnalyticsPage() {
           width: 6px;
         }
         .timeline-trail::-webkit-scrollbar-thumb {
-          background: rgba(46, 117, 81, 0.3);
-          border-radius: 3px;
+          background: #1f2937;
+          border-radius: 9999px;
         }
 
         /* Vertical Chronology Line Draw */
@@ -1401,7 +1405,7 @@ export default function AdminAnalyticsPage() {
           top: 0;
           bottom: 0;
           width: 2px;
-          background: rgba(46, 117, 81, 0.3);
+          background: rgba(16, 185, 129, 0.25);
           z-index: 1;
         }
         .connector-line.dashed {
@@ -1409,8 +1413,8 @@ export default function AdminAnalyticsPage() {
             to bottom,
             transparent,
             transparent 4px,
-            rgba(46, 117, 81, 0.4) 4px,
-            rgba(46, 117, 81, 0.4) 8px
+            rgba(16, 185, 129, 0.3) 4px,
+            rgba(16, 185, 129, 0.3) 8px
           );
         }
         .node-icon {
@@ -1438,9 +1442,9 @@ export default function AdminAnalyticsPage() {
         }
 
         .node-content-card {
-          background: rgba(18, 38, 29, 0.3);
-          border: 1px solid rgba(46, 117, 81, 0.15);
-          border-radius: 12px;
+          background: var(--input-bg, rgba(13, 17, 23, 0.85));
+          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
+          border-radius: 10px;
           padding: 1rem 1.25rem;
           margin-left: 0.75rem;
           margin-bottom: 1.5rem;
