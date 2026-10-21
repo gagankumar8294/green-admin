@@ -9,10 +9,11 @@ import AdminCommentsDashboard from "@/components/Admin/AdminCommentsDashboard";
 import AdminShippingSettings from "@/components/Admin/AdminShippingSettings";
 import CheckoutAnalytics from "@/components/Admin/CheckoutAnalytics";
 import AdminAnalyticsPage from "./analytics/page";
+import RegisteredUsers from "@/components/Admin/RegisteredUsers/RegisteredUsers";
 import {
   FiShoppingBag, FiPlusCircle, FiGrid, FiBarChart2,
   FiActivity, FiEdit3, FiMessageSquare, FiTruck,
-  FiMenu, FiX, FiLogOut, FiUser,
+  FiMenu, FiX, FiLogOut, FiUser, FiUsers,
 } from "react-icons/fi";
 import { MdSpa } from "react-icons/md";
 
@@ -21,6 +22,7 @@ import { MdSpa } from "react-icons/md";
 --------------------------------------------------------------- */
 const TABS = [
   { id: "orders",    Icon: FiShoppingBag,  label: "Orders" },
+  { id: "users",     Icon: FiUsers,        label: "Registered Users" },
   { id: "products",  Icon: FiPlusCircle,   label: "Add Products" },
   { id: "inventory", Icon: FiGrid,         label: "Inventory" },
   { id: "analytics", Icon: FiBarChart2,    label: "Checkout Analytics" },
@@ -32,6 +34,7 @@ const TABS = [
 
 const TAB_COMPONENTS = {
   orders:    AdminOrdersPage,
+  users:     RegisteredUsers,
   products:  AddProductsForm,
   inventory: Inventory,
   analytics: CheckoutAnalytics,
@@ -102,6 +105,7 @@ export default function AdminPortal() {
   const [toasts, setToasts] = useState([]);
   const [unreadCounts, setUnreadCounts] = useState({
     orders: 0,
+    users: 0,
     analytics: 0,
     sessions: 0,
     comments: 0,
