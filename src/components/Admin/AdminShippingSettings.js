@@ -84,11 +84,6 @@ export default function AdminShippingSettings() {
 
   return (
     <div className={styles.settingsWrapper}>
-      <h2 className={styles.title}><FiTruck size={18} style={{marginRight:8}} />Shipping Fee Configurations</h2>
-      <p className={styles.description}>
-        Set the minimum order value required for free delivery and configure the flat rate shipping fee applied to orders below that threshold.
-      </p>
-
       {message && <div className={styles.successMessage}><FiCheckCircle size={15} style={{marginRight:6}} />{message}</div>}
       {error && <div className={styles.errorMessage}><FiAlertCircle size={15} style={{marginRight:6}} />{error}</div>}
 

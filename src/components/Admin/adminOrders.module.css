@@ -14,11 +14,11 @@
 /* ─── Top Header Section ─── */
 .titleHeader {
   display: flex;
-  justify-content: space-between;
+  justify-content: flex-end;
   align-items: center;
   flex-wrap: wrap;
   gap: 16px;
-  margin-bottom: 24px;
+  margin-bottom: 16px;
 }
 
 .titleWrapper {

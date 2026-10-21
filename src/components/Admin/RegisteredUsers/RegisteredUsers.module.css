@@ -6,28 +6,12 @@
   color: #f8fafc;
 }
 
-/* Header */
+/* Top Actions Row */
 .header {
   display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  margin-bottom: 2rem;
-  flex-wrap: wrap;
-  gap: 1rem;
-}
-
-.title {
-  font-size: 1.75rem;
-  font-weight: 800;
-  color: #f8fafc;
-  margin: 0 0 0.35rem 0;
-  letter-spacing: -0.02em;
-}
-
-.subtitle {
-  font-size: 0.9rem;
-  color: #94a3b8;
-  margin: 0;
+  justify-content: flex-end;
+  align-items: center;
+  margin-bottom: 16px;
 }
 
 .refreshBtn {

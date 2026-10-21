@@ -846,7 +846,7 @@ export default function AdminPortal() {
         .dash {
           display: flex;
           min-height: 100vh;
-          background: var(--bg, #080d14);
+          background: var(--sidebar-bg, #0d1117);
           position: relative;
         }
 
@@ -1131,6 +1131,7 @@ export default function AdminPortal() {
           flex-direction: column;
           min-width: 0;
           min-height: 100vh;
+          background: var(--sidebar-bg, #0d1117);
         }
         .main-body {
           flex: 1;
@@ -1139,6 +1140,7 @@ export default function AdminPortal() {
           width: 100%;
           max-width: 100%;
           box-sizing: border-box;
+          background: var(--sidebar-bg, #0d1117);
         }
 
         /* ══════ RESPONSIVE ══════ */

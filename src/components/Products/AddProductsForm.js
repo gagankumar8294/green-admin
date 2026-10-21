@@ -350,16 +350,24 @@ export default function AddProductForm() {
   return (
     <div ref={formTopRef} style={{ width: "100%", scrollMarginTop: "20px" }}>
       <form className={styles.formContainer} onSubmit={(e) => e.preventDefault()}>
-        <div className={styles.headerContainer}>
-          <h2 className={styles.title}>
-            {isEditing ? <><FiEdit2 size={20} style={{marginRight:8}} />Edit Product: {formData.name}</> : <><FiPackage size={20} style={{marginRight:8}} />Add New Product</>}
-          </h2>
-          <p className={styles.subtitle}>
-            {isEditing
-              ? "Modify the fields below to update the product in your store."
-              : "Fill in the details below to add a new plant or accessory to your store inventory."}
-          </p>
-        </div>
+        {isEditing && (
+          <div style={{
+            display: "inline-flex",
+            alignItems: "center",
+            gap: "8px",
+            background: "rgba(16, 185, 129, 0.15)",
+            border: "1px solid rgba(16, 185, 129, 0.3)",
+            color: "#34d399",
+            padding: "8px 14px",
+            borderRadius: "8px",
+            fontSize: "0.85rem",
+            fontWeight: 600,
+            marginBottom: "8px",
+            width: "fit-content"
+          }}>
+            <FiEdit2 size={16} /> Editing Product: {formData.name}
+          </div>
+        )}
 
       {/* Section 1: Basic Information */}
       <div className={styles.formSection}>

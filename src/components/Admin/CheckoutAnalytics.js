@@ -155,13 +155,6 @@ export default function CheckoutAnalytics() {
 
   return (
     <div className={styles.container}>
-      <div className={styles.titleSection}>
-        <h1 className={styles.title}>Checkout Analytics & Abandonment</h1>
-        <p className={styles.subtitle}>
-          Track checkout attempts, monitor payments, and inspect where customers drop off.
-        </p>
-      </div>
-
       {/* KPI Cards section */}
       <div className={styles.kpiGrid}>
         <div className={styles.kpiCard}>

@@ -134,10 +134,6 @@ export default function AddBlogs() {
 
       {activeBlogTab === "add" ? (
         <form onSubmit={(e) => e.preventDefault()}>
-          <h2 className={styles.heading}>
-            {isEditing ? "Edit Blog" : "Add Blog"}
-          </h2>
-
           <input
             ref={titleRef}
             placeholder="Blog Title"

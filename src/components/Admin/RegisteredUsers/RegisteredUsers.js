@@ -160,14 +160,8 @@ export default function RegisteredUsers() {
 
   return (
     <div className={styles.container}>
-      {/* Top Header */}
+      {/* Top Actions Row */}
       <div className={styles.header}>
-        <div>
-          <h1 className={styles.title}>Registered Customers</h1>
-          <p className={styles.subtitle}>
-            Comprehensive single-line directory with profile images, registration timestamps, and customer lifetime metrics
-          </p>
-        </div>
         <button
           onClick={fetchUsers}
           className={styles.refreshBtn}

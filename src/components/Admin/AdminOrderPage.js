@@ -322,12 +322,6 @@ export default function AdminOrdersPage() {
   if (loading) {
     return (
       <div className={styles.page}>
-        <div className={styles.titleHeader}>
-          <div className={styles.titleWrapper}>
-            <h1 className={styles.title}>Orders</h1>
-            <p className={styles.subtitle}>Direct MongoDB Access</p>
-          </div>
-        </div>
         <div
           style={{
             display: "flex",
@@ -353,18 +347,8 @@ export default function AdminOrdersPage() {
 
   return (
     <div className={styles.page}>
-      {/* ─── TITLE & TOP ACTIONS ─── */}
+      {/* ─── TOP ACTIONS ─── */}
       <div className={styles.titleHeader}>
-        <div className={styles.titleWrapper}>
-          <h1 className={styles.title}>
-            Orders
-            <span className={styles.titleBadge}>{orders.length} Total</span>
-          </h1>
-          <p className={styles.subtitle}>
-            Manage, fulfill, and track customer shipments in real-time
-          </p>
-        </div>
-
         <div className={styles.headerActions}>
           <button
             onClick={() => fetchOrders(true)}

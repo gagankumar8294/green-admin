@@ -269,12 +269,8 @@ export default function AdminAnalyticsPage() {
 
   return (
     <div className="analytics-container">
-      {/* Header */}
-      <header className="analytics-header">
-        <div className="header-info">
-          <h1>User Flow Journey & Interactions</h1>
-          <p>Analyze live guest journeys, navigation flows, and conversion metrics in real time.</p>
-        </div>
+      {/* Square-Border Filter & Controls Strip */}
+      <div className="date-strip-container">
         <div className="analytics-filters">
           <button 
             className={`filter-btn ${filterType === "all" ? "active" : ""}`}
@@ -298,10 +294,7 @@ export default function AdminAnalyticsPage() {
             {filterType === "anon" && <span className="btn-count-chip">{totalRecords}</span>}
           </button>
         </div>
-      </header>
 
-      {/* Round-Border Day Filter Strip */}
-      <div className="date-strip-container">
         <div className="date-strip-days">
           <button
             type="button"
@@ -651,29 +644,7 @@ export default function AdminAnalyticsPage() {
           --connector-width: 40px;
         }
 
-        /* Header styles */
-        .analytics-header {
-          display: flex;
-          justify-content: space-between;
-          align-items: center;
-          background: var(--card-bg, #111827);
-          border: 1px solid var(--card-border, rgba(255, 255, 255, 0.08));
-          border-radius: 12px;
-          padding: 1rem 1.4rem;
-          box-shadow: 0 4px 20px 0 rgba(0, 0, 0, 0.25);
-        }
-        .header-info h1 {
-          font-size: 1.75rem;
-          font-weight: 800;
-          color: var(--text, #f3f4f6);
-          margin: 0 0 0.25rem 0;
-          letter-spacing: -0.02em;
-        }
-        .header-info p {
-          color: var(--text-muted, #9ca3af);
-          margin: 0;
-          font-size: 0.9rem;
-        }
+        /* Filter controls */
         .analytics-filters {
           display: flex;
           gap: 0.5rem;

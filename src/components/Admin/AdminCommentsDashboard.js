@@ -170,11 +170,6 @@ export default function AdminCommentsDashboard() {
 
   return (
     <div className={styles.dashboardContainer}>
-      <div className={styles.header}>
-        <h1>Comment Moderation & Activity Center</h1>
-        <p className={styles.subtitle}>Track live notifications, review metrics, and moderate community conversations across all blog posts.</p>
-      </div>
-
       {/* Analytics metrics Grid */}
       <div className={styles.analyticsGrid}>
         <div className={styles.statCard}>
