@@ -1,6 +1,6 @@
 .container {
   padding: 1.5rem 2rem;
-  max-width: 1400px;
+  max-width: 100%;
   margin: 0 auto;
   color: #f8fafc;
 }
@@ -142,7 +142,7 @@
   gap: 1rem;
   align-items: center;
   justify-content: space-between;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
   background: rgba(18, 38, 29, 0.25);
   border: 1px solid rgba(46, 117, 81, 0.2);
   padding: 1rem 1.25rem;
@@ -249,38 +249,66 @@
   border-color: #10b981;
 }
 
-/* Table */
+.scrollHint {
+  font-size: 0.74rem;
+  color: #64748b;
+  margin-bottom: 0.65rem;
+  padding-left: 0.25rem;
+  font-weight: 500;
+}
+
+/* Horizontal Scrollable Table Wrapper */
 .tableWrapper {
   background: rgba(18, 38, 29, 0.25);
   backdrop-filter: blur(12px);
-  border: 1px solid rgba(46, 117, 81, 0.2);
+  border: 1px solid rgba(46, 117, 81, 0.25);
   border-radius: 14px;
   overflow-x: auto;
   box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+  -webkit-overflow-scrolling: touch;
+}
+
+.tableWrapper::-webkit-scrollbar {
+  height: 8px;
+}
+.tableWrapper::-webkit-scrollbar-track {
+  background: rgba(0, 0, 0, 0.3);
+  border-radius: 4px;
+}
+.tableWrapper::-webkit-scrollbar-thumb {
+  background: rgba(74, 222, 128, 0.35);
+  border-radius: 4px;
+}
+.tableWrapper::-webkit-scrollbar-thumb:hover {
+  background: rgba(74, 222, 128, 0.65);
 }
 
 .usersTable {
   width: 100%;
+  min-width: 1550px;
   border-collapse: collapse;
   text-align: left;
   font-size: 0.85rem;
+  white-space: nowrap;
 }
 
 .usersTable th {
-  padding: 1rem 1.25rem;
-  background: rgba(0, 0, 0, 0.2);
+  padding: 0.95rem 1.15rem;
+  background: rgba(0, 0, 0, 0.25);
   color: #94a3b8;
-  font-size: 0.75rem;
+  font-size: 0.72rem;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.05em;
-  border-bottom: 1px solid rgba(46, 117, 81, 0.2);
+  border-bottom: 1px solid rgba(46, 117, 81, 0.25);
+  white-space: nowrap;
 }
 
 .usersTable td {
-  padding: 1rem 1.25rem;
+  padding: 0.85rem 1.15rem;
   border-bottom: 1px solid rgba(46, 117, 81, 0.1);
   vertical-align: middle;
+  white-space: nowrap;
 }
 
 .userRow {
@@ -291,17 +319,19 @@
   background: rgba(16, 185, 129, 0.06);
 }
 
-/* User Cell */
-.userCell {
-  display: flex;
+/* Single Line Cell */
+.singleLineCell {
+  display: inline-flex;
   align-items: center;
-  gap: 0.85rem;
+  gap: 0.5rem;
+  white-space: nowrap;
 }
 
+/* Avatar */
 .avatarWrapper {
   position: relative;
-  width: 42px;
-  height: 42px;
+  width: 34px;
+  height: 34px;
   flex-shrink: 0;
 }
 
@@ -310,7 +340,7 @@
   height: 100%;
   border-radius: 50%;
   object-fit: cover;
-  border: 2px solid rgba(74, 222, 128, 0.4);
+  border: 1.5px solid rgba(74, 222, 128, 0.5);
 }
 
 .avatarFallback {
@@ -323,52 +353,118 @@
   align-items: center;
   justify-content: center;
   font-weight: 700;
-  font-size: 1.1rem;
-  border: 2px solid rgba(74, 222, 128, 0.3);
+  font-size: 0.9rem;
+  border: 1.5px solid rgba(74, 222, 128, 0.4);
 }
 
 .googleBadge {
   position: absolute;
   bottom: -2px;
   right: -2px;
-  width: 16px;
-  height: 16px;
+  width: 13px;
+  height: 13px;
   border-radius: 50%;
   background: #ffffff;
   color: #ea4335;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 9px;
-  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+  font-size: 7px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.4);
 }
 
-.userInfo {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-  overflow: hidden;
-}
-
-.userName {
-  font-size: 0.95rem;
+.userNameText {
+  font-size: 0.88rem;
   font-weight: 700;
   color: #f8fafc;
-}
-
-.userEmailRow {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-}
-
-.userEmail {
-  font-size: 0.78rem;
-  color: #94a3b8;
+  max-width: 160px;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
-  max-width: 220px;
+}
+
+.userEmailText {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  max-width: 190px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.phoneText {
+  font-size: 0.82rem;
+  color: #e2e8f0;
+  font-family: monospace;
+}
+
+.datePrimaryText {
+  font-size: 0.8rem;
+  color: #cbd5e1;
+  font-weight: 500;
+}
+
+.relativeBadge {
+  font-size: 0.7rem;
+  color: #94a3b8;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.locationText {
+  font-size: 0.8rem;
+  color: #94a3b8;
+  max-width: 160px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ltvBadgeText {
+  font-size: 0.9rem;
+  font-weight: 800;
+  color: #4ade80;
+}
+
+.orderPill {
+  font-size: 0.7rem;
+  font-weight: 700;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  background: rgba(16, 185, 129, 0.15);
+  color: #34d399;
+  border: 1px solid rgba(16, 185, 129, 0.25);
+}
+
+.failedPill {
+  background: rgba(239, 68, 68, 0.12);
+  color: #f87171;
+  border-color: rgba(239, 68, 68, 0.25);
+}
+
+.activeCartPill {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-size: 0.72rem;
+  font-weight: 700;
+  background: rgba(245, 158, 11, 0.15);
+  border: 1px solid rgba(245, 158, 11, 0.3);
+  color: #fbbf24;
+  padding: 0.2rem 0.55rem;
+  border-radius: 6px;
+}
+
+.emptyCartBadge {
+  font-size: 0.75rem;
+  color: #64748b;
+}
+
+.lastActiveText {
+  font-size: 0.76rem;
+  color: #94a3b8;
 }
 
 .copyBtn {
@@ -376,7 +472,7 @@
   border: none;
   color: #64748b;
   cursor: pointer;
-  padding: 1px 3px;
+  padding: 2px 4px;
   font-size: 0.75rem;
   transition: color 0.2s;
   display: inline-flex;
@@ -391,59 +487,10 @@
   color: #10b981;
 }
 
-/* Date Cell */
-.dateCell {
-  display: flex;
-  flex-direction: column;
-  gap: 0.2rem;
-}
-
-.datePrimary {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-  font-size: 0.85rem;
-  font-weight: 600;
-  color: #e2e8f0;
-}
-
-.dateSecondary {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
-.relativeBadge {
-  color: #94a3b8;
-  font-weight: 500;
-}
-
 .cellIcon {
   font-size: 0.85rem;
   color: #64748b;
   flex-shrink: 0;
-}
-
-/* Contact Cell */
-.contactCell {
-  display: flex;
-  flex-direction: column;
-  gap: 0.3rem;
-}
-
-.phoneRow {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.85rem;
-  color: #e2e8f0;
-}
-
-.locationRow {
-  display: flex;
-  align-items: center;
-  gap: 0.4rem;
-  font-size: 0.78rem;
-  color: #94a3b8;
 }
 
 .whatsappIconBtn {
@@ -464,95 +511,17 @@
   font-style: italic;
 }
 
-/* Orders Cell */
-.ordersCell {
-  display: flex;
-  flex-direction: column;
-  gap: 0.25rem;
-}
-
-.ltvBadge {
-  font-size: 0.95rem;
-  font-weight: 800;
-  color: #4ade80;
-}
-
-.orderCountsRow {
-  display: flex;
-  align-items: center;
-  gap: 0.35rem;
-}
-
-.orderPill {
-  font-size: 0.7rem;
-  font-weight: 700;
-  padding: 0.1rem 0.4rem;
-  border-radius: 4px;
-  background: rgba(16, 185, 129, 0.15);
-  color: #34d399;
-  border: 1px solid rgba(16, 185, 129, 0.25);
-}
-
-.failedPill {
-  background: rgba(239, 68, 68, 0.12);
-  color: #f87171;
-  border-color: rgba(239, 68, 68, 0.25);
-}
-
-.lastOrderTime {
-  font-size: 0.72rem;
-  color: #64748b;
-}
-
-/* Cart Cell */
-.cartCell {
-  display: flex;
-  align-items: center;
-}
-
-.activeCartBadge {
-  display: flex;
-  align-items: center;
-  gap: 0.5rem;
-  background: rgba(245, 158, 11, 0.12);
-  border: 1px solid rgba(245, 158, 11, 0.25);
-  padding: 0.3rem 0.6rem;
-  border-radius: 8px;
-}
-
-.cartBadgeIcon {
-  color: #fbbf24;
-  font-size: 1.1rem;
-}
-
-.cartItemsCount {
-  font-size: 0.75rem;
-  font-weight: 700;
-  color: #fde68a;
-}
-
-.cartValue {
-  font-size: 0.7rem;
-  color: #f59e0b;
-  font-weight: 600;
-}
-
-.emptyCartBadge {
-  font-size: 0.75rem;
-  color: #64748b;
-}
-
 /* Action Button */
 .viewDetailsBtn {
   display: inline-flex;
   align-items: center;
-  gap: 0.35rem;
+  gap: 0.3rem;
   background: rgba(46, 117, 81, 0.2);
   border: 1px solid rgba(46, 117, 81, 0.35);
   color: #4ade80;
-  padding: 0.45rem 0.85rem;
+  padding: 0.35rem 0.75rem;
   border-radius: 6px;
-  font-size: 0.8rem;
+  font-size: 0.78rem;
   font-weight: 600;
   cursor: pointer;
   transition: all 0.2s;

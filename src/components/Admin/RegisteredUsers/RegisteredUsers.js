@@ -12,14 +12,11 @@ import {
   FiMail,
   FiMapPin,
   FiCalendar,
-  FiExternalLink,
   FiCopy,
   FiCheck,
-  FiClock,
   FiX,
   FiChevronRight,
   FiRefreshCw,
-  FiMessageSquare,
   FiAlertCircle,
   FiActivity,
 } from "react-icons/fi";
@@ -160,7 +157,7 @@ export default function RegisteredUsers() {
         <div>
           <h1 className={styles.title}>Registered Customers</h1>
           <p className={styles.subtitle}>
-            View complete profiles, registration dates, checkout activity, and lifetime value
+            Comprehensive single-line directory with profile images, registration timestamps, and customer lifetime metrics
           </p>
         </div>
         <button
@@ -283,7 +280,12 @@ export default function RegisteredUsers() {
         </div>
       </div>
 
-      {/* Users List Table / Card View */}
+      {/* Horizontal Scroll Hint */}
+      <div className={styles.scrollHint}>
+        <span>← Scroll horizontally to view all columns in a single line →</span>
+      </div>
+
+      {/* Users List Table / Horizontal Single Line View */}
       {loading ? (
         <div className={styles.loadingContainer}>
           <div className={styles.spinner}></div>
@@ -300,12 +302,16 @@ export default function RegisteredUsers() {
           <table className={styles.usersTable}>
             <thead>
               <tr>
-                <th>Customer</th>
-                <th>Registered Date</th>
-                <th>Contact &amp; Location</th>
-                <th>Orders &amp; LTV</th>
-                <th>Current Cart</th>
-                <th style={{ textAlign: "right" }}>Actions</th>
+                <th style={{ width: "220px" }}>Customer</th>
+                <th style={{ width: "240px" }}>Email</th>
+                <th style={{ width: "160px" }}>Phone / WhatsApp</th>
+                <th style={{ width: "210px" }}>Registered Date &amp; Time</th>
+                <th style={{ width: "170px" }}>City / State</th>
+                <th style={{ width: "130px" }}>Lifetime Spend</th>
+                <th style={{ width: "180px" }}>Order History</th>
+                <th style={{ width: "160px" }}>Current Cart</th>
+                <th style={{ width: "120px" }}>Last Active</th>
+                <th style={{ width: "120px", textAlign: "right" }}>Action</th>
               </tr>
             </thead>
             <tbody>
@@ -318,9 +324,9 @@ export default function RegisteredUsers() {
 
                 return (
                   <tr key={user._id} className={styles.userRow}>
-                    {/* User Profile */}
+                    {/* 1. Customer: Avatar + Name + Google Badge */}
                     <td>
-                      <div className={styles.userCell}>
+                      <div className={styles.singleLineCell}>
                         <div className={styles.avatarWrapper}>
                           {user.image ? (
                             <img
@@ -346,131 +352,138 @@ export default function RegisteredUsers() {
                             </div>
                           )}
                         </div>
-                        <div className={styles.userInfo}>
-                          <div className={styles.userName}>{user.name}</div>
-                          <div className={styles.userEmailRow}>
-                            <span className={styles.userEmail}>{user.email}</span>
-                            <button
-                              onClick={() => copyToClipboard(user.email, user._id)}
-                              className={styles.copyBtn}
-                              title="Copy Email"
-                            >
-                              {copiedEmail === user._id ? (
-                                <FiCheck className={styles.checkIcon} />
-                              ) : (
-                                <FiCopy />
-                              )}
-                            </button>
-                          </div>
-                        </div>
+                        <span className={styles.userNameText} title={user.name}>
+                          {user.name}
+                        </span>
                       </div>
                     </td>
 
-                    {/* Registration Date */}
+                    {/* 2. Email Address with Copy Button */}
                     <td>
-                      <div className={styles.dateCell}>
-                        <div className={styles.datePrimary}>
-                          <FiCalendar className={styles.cellIcon} />
-                          {formatDate(user.registeredAt)}
-                        </div>
-                        <div className={styles.dateSecondary}>
-                          {formatTime(user.registeredAt)} •{" "}
-                          <span className={styles.relativeBadge}>
-                            {getRelativeTime(user.registeredAt)}
-                          </span>
-                        </div>
+                      <div className={styles.singleLineCell}>
+                        <FiMail className={styles.cellIcon} />
+                        <span className={styles.userEmailText} title={user.email}>
+                          {user.email}
+                        </span>
+                        <button
+                          onClick={() => copyToClipboard(user.email, user._id)}
+                          className={styles.copyBtn}
+                          title="Copy Email"
+                        >
+                          {copiedEmail === user._id ? (
+                            <FiCheck className={styles.checkIcon} />
+                          ) : (
+                            <FiCopy />
+                          )}
+                        </button>
                       </div>
                     </td>
 
-                    {/* Contact & Location */}
+                    {/* 3. Phone / WhatsApp */}
                     <td>
-                      <div className={styles.contactCell}>
+                      <div className={styles.singleLineCell}>
                         {phone ? (
-                          <div className={styles.phoneRow}>
+                          <>
                             <FiPhone className={styles.cellIcon} />
-                            <span>{phone}</span>
+                            <span className={styles.phoneText}>{phone}</span>
                             {whatsappUrl && (
                               <a
                                 href={whatsappUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
                                 className={styles.whatsappIconBtn}
-                                title="Chat on WhatsApp"
+                                title="Chat with customer on WhatsApp"
                               >
                                 <FaWhatsapp />
                               </a>
                             )}
-                          </div>
+                          </>
                         ) : (
-                          <span className={styles.mutedText}>No phone recorded</span>
-                        )}
-
-                        {user.address?.city ? (
-                          <div className={styles.locationRow} title={`${user.address.street || ""}, ${user.address.city}, ${user.address.state || ""}`}>
-                            <FiMapPin className={styles.cellIcon} />
-                            <span>
-                              {user.address.city}
-                              {user.address.state ? `, ${user.address.state}` : ""}
-                            </span>
-                          </div>
-                        ) : (
-                          <span className={styles.mutedText}>No address saved</span>
+                          <span className={styles.mutedText}>Not provided</span>
                         )}
                       </div>
                     </td>
 
-                    {/* Orders & Lifetime Value */}
+                    {/* 4. Registration Date & Time */}
                     <td>
-                      <div className={styles.ordersCell}>
-                        <div className={styles.ltvBadge}>
+                      <div className={styles.singleLineCell}>
+                        <FiCalendar className={styles.cellIcon} />
+                        <span className={styles.datePrimaryText}>
+                          {formatDate(user.registeredAt)}, {formatTime(user.registeredAt)}
+                        </span>
+                        <span className={styles.relativeBadge}>
+                          {getRelativeTime(user.registeredAt)}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* 5. City & State */}
+                    <td>
+                      <div className={styles.singleLineCell}>
+                        <FiMapPin className={styles.cellIcon} />
+                        <span className={styles.locationText} title={`${user.address?.street || ""}, ${user.address?.city || ""}, ${user.address?.state || ""}`}>
+                          {user.address?.city
+                            ? `${user.address.city}${user.address.state ? `, ${user.address.state}` : ""}`
+                            : "No address"}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* 6. Lifetime Spend (LTV) */}
+                    <td>
+                      <div className={styles.singleLineCell}>
+                        <span className={styles.ltvBadgeText}>
                           ₹{user.metrics.totalSpent.toLocaleString("en-IN")}
-                        </div>
-                        <div className={styles.orderCountsRow}>
-                          <span className={styles.orderPill}>
-                            {user.metrics.paidOrdersCount} Paid
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* 7. Orders Breakdown */}
+                    <td>
+                      <div className={styles.singleLineCell}>
+                        <span className={styles.orderPill}>
+                          {user.metrics.paidOrdersCount} Paid
+                        </span>
+                        {user.metrics.failedOrdersCount > 0 && (
+                          <span className={`${styles.orderPill} ${styles.failedPill}`}>
+                            {user.metrics.failedOrdersCount} Incomplete
                           </span>
-                          {user.metrics.failedOrdersCount > 0 && (
-                            <span className={`${styles.orderPill} ${styles.failedPill}`}>
-                              {user.metrics.failedOrdersCount} Cancelled
-                            </span>
-                          )}
-                        </div>
-                        {user.metrics.lastOrderDate && (
-                          <div className={styles.lastOrderTime}>
-                            Last: {getRelativeTime(user.metrics.lastOrderDate)}
-                          </div>
+                        )}
+                        {user.metrics.totalOrders === 0 && (
+                          <span className={styles.mutedText}>0 Orders</span>
                         )}
                       </div>
                     </td>
 
-                    {/* Cart Status */}
+                    {/* 8. Active Cart */}
                     <td>
-                      <div className={styles.cartCell}>
+                      <div className={styles.singleLineCell}>
                         {user.cart.hasActiveCart ? (
-                          <div className={styles.activeCartBadge}>
-                            <FiShoppingCart className={styles.cartBadgeIcon} />
-                            <div>
-                              <div className={styles.cartItemsCount}>
-                                {user.cart.itemsCount} {user.cart.itemsCount === 1 ? "Plant" : "Plants"}
-                              </div>
-                              <div className={styles.cartValue}>
-                                ₹{user.cart.total.toLocaleString("en-IN")}
-                              </div>
-                            </div>
-                          </div>
+                          <span className={styles.activeCartPill}>
+                            <FiShoppingCart /> {user.cart.itemsCount} {user.cart.itemsCount === 1 ? "Plant" : "Plants"} (₹{user.cart.total})
+                          </span>
                         ) : (
                           <span className={styles.emptyCartBadge}>Empty</span>
                         )}
                       </div>
                     </td>
 
-                    {/* Actions */}
+                    {/* 9. Last Active */}
+                    <td>
+                      <div className={styles.singleLineCell}>
+                        <span className={styles.lastActiveText}>
+                          {getRelativeTime(user.lastActive)}
+                        </span>
+                      </div>
+                    </td>
+
+                    {/* 10. Action Button */}
                     <td style={{ textAlign: "right" }}>
                       <button
                         onClick={() => setSelectedUser(user)}
                         className={styles.viewDetailsBtn}
                       >
-                        <span>View Details</span>
+                        <span>View</span>
                         <FiChevronRight />
                       </button>
                     </td>
