@@ -17,22 +17,23 @@
   --bg:              #080d14;
   --sidebar-bg:      #0d1117;
   --card-bg:         #111827;
+  --card-hover-bg:   #151f30;
   --hover-bg:        #1a2332;
-  --input-bg:        #0d1117;
+  --input-bg:        rgba(13, 17, 23, 0.85);
 
   /* Borders */
-  --card-border:     rgba(255, 255, 255, 0.07);
-  --input-border:    rgba(255, 255, 255, 0.12);
+  --card-border:     rgba(255, 255, 255, 0.08);
+  --input-border:    rgba(255, 255, 255, 0.13);
   --border-color:    rgba(255, 255, 255, 0.08);
 
   /* Text — these aliases MUST all resolve for every component */
-  --text:            #e5e7eb;
-  --text-color:      #e5e7eb;   /* alias used in Comments & Analytics */
+  --text:            #f3f4f6;
+  --text-color:      #f3f4f6;   /* alias used in Comments & Analytics */
   --text-muted:      #9ca3af;
   --text-faint:      #6b7280;
 
   /* Shadows */
-  --shadow-color:    rgba(0, 0, 0, 0.4);
+  --shadow-color:    rgba(0, 0, 0, 0.45);
   --shadow-md:       0 4px 20px rgba(0, 0, 0, 0.4);
   --shadow-lg:       0 8px 32px rgba(0, 0, 0, 0.5);
 
@@ -43,6 +44,13 @@
   /* Theme button alias used in some components */
   --theme-add-btn:        #10b981;
   --theme-add-btn-text:   #ffffff;
+
+  /* Standard Component Metrics */
+  --ctrl-height:     40px;
+  --ctrl-radius:     8px;
+  --page-pad-desktop: 28px 32px;
+  --page-pad-tablet:  20px 20px;
+  --page-pad-mobile:  16px 14px;
 }
 
 /* ============================================================
@@ -78,24 +86,136 @@ body {
 ::-webkit-scrollbar-thumb:hover { background: #374151; }
 
 /* ============================================================
-   FORM ELEMENT RESETS — prevent browser defaults fighting vars
+   FORM ELEMENT STYLING — Premium, unified dark UI controls
    ============================================================ */
 input, select, textarea, button {
   font-family: inherit;
   font-size: inherit;
+  box-sizing: border-box;
+}
+
+/* Text Inputs, Searches, Numbers, Emails, Passwords */
+input[type="text"],
+input[type="search"],
+input[type="email"],
+input[type="password"],
+input[type="number"],
+input[type="tel"],
+input[type="url"],
+textarea {
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: var(--ctrl-radius);
+  padding: 9px 14px;
+  font-size: 0.875rem;
+  line-height: 1.4;
+  outline: none;
+  transition: border-color 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              box-shadow 0.2s cubic-bezier(0.4, 0, 0.2, 1),
+              background-color 0.2s ease;
+}
+
+input[type="text"]:focus,
+input[type="search"]:focus,
+input[type="email"]:focus,
+input[type="password"]:focus,
+input[type="number"]:focus,
+input[type="tel"]:focus,
+input[type="url"]:focus,
+textarea:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--green-glow);
+  background: rgba(15, 23, 42, 0.95);
+}
+
+/* Unified Dropdowns (<select>) with Custom SVG Emerald Chevron */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-color: var(--input-bg);
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%2310b981' stroke-width='2.2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+  background-repeat: no-repeat;
+  background-position: right 14px center;
+  background-size: 15px;
+  padding: 9px 38px 9px 14px;
+  border: 1px solid var(--input-border);
+  border-radius: var(--ctrl-radius);
+  color: var(--text);
+  font-size: 0.875rem;
+  font-weight: 500;
+  cursor: pointer;
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease, background-color 0.2s ease;
+}
+
+select:hover:not(:disabled) {
+  border-color: rgba(16, 185, 129, 0.4);
+  background-color: var(--hover-bg);
+}
+
+select:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--green-glow);
+  background-color: var(--hover-bg);
+}
+
+/* Date and Time Pickers — Dark Theme OS Support & Emerald Picker Icon */
+input[type="date"],
+input[type="datetime-local"],
+input[type="time"] {
+  color-scheme: dark;
+  background: var(--input-bg);
+  border: 1px solid var(--input-border);
+  color: var(--text);
+  border-radius: var(--ctrl-radius);
+  padding: 8px 14px;
+  font-size: 0.85rem;
+  font-weight: 500;
+  outline: none;
+  cursor: pointer;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input[type="date"]:focus,
+input[type="datetime-local"]:focus,
+input[type="time"]:focus {
+  border-color: var(--green-primary);
+  box-shadow: 0 0 0 3px var(--green-glow);
+}
+
+/* Custom WebKit Calendar & Clock Icons */
+input[type="date"]::-webkit-calendar-picker-indicator,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator,
+input[type="time"]::-webkit-calendar-picker-indicator {
+  cursor: pointer;
+  filter: invert(0.8) sepia(100%) hue-rotate(90deg) brightness(1.2) contrast(1.1);
+  opacity: 0.85;
+  transition: all 0.2s ease;
+  padding: 3px;
+  border-radius: 4px;
+}
+
+input[type="date"]::-webkit-calendar-picker-indicator:hover,
+input[type="datetime-local"]::-webkit-calendar-picker-indicator:hover,
+input[type="time"]::-webkit-calendar-picker-indicator:hover {
+  opacity: 1;
+  background: rgba(16, 185, 129, 0.15);
+  transform: scale(1.08);
 }
 
 /* Fix browser autofill yellow overlay */
 input:-webkit-autofill,
 input:-webkit-autofill:hover,
 input:-webkit-autofill:focus {
-  -webkit-box-shadow: 0 0 0 1000px var(--input-bg) inset !important;
+  -webkit-box-shadow: 0 0 0 1000px #0d1117 inset !important;
   -webkit-text-fill-color: var(--text) !important;
   caret-color: var(--text);
   transition: background-color 5000s ease-in-out 0s;
 }
 
-/* Global placeholder fix — these must be visible on dark bg */
+/* Global placeholder fix — visible on dark bg */
 ::placeholder {
   color: var(--text-faint);
   opacity: 1;
@@ -103,8 +223,114 @@ input:-webkit-autofill:focus {
 
 /* Make <select> options readable on dark bg */
 option {
-  background: var(--card-bg);
+  background: #0f172a;
+  color: #f3f4f6;
+  padding: 8px;
+}
+
+/* ============================================================
+   SHARED UI COMPONENT UTILITIES
+   ============================================================ */
+
+/* Standard Action Buttons */
+.admin-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  padding: 9px 16px;
+  border-radius: var(--ctrl-radius);
+  font-size: 0.875rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  border: 1px solid transparent;
+  line-height: 1;
+}
+
+.admin-btn-primary {
+  background: linear-gradient(135deg, var(--green-primary), var(--green-dark));
+  color: #ffffff;
+  border-color: rgba(16, 185, 129, 0.3);
+  box-shadow: 0 2px 10px rgba(16, 185, 129, 0.25);
+}
+
+.admin-btn-primary:hover:not(:disabled) {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 16px rgba(16, 185, 129, 0.35);
+}
+
+.admin-btn-primary:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+.admin-btn-secondary {
+  background: rgba(15, 23, 42, 0.6);
+  border: 1px solid var(--border-color);
   color: var(--text);
+}
+
+.admin-btn-secondary:hover:not(:disabled) {
+  background: var(--hover-bg);
+  border-color: rgba(16, 185, 129, 0.35);
+  color: #34d399;
+}
+
+/* Filter Pills */
+.admin-pill {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 6px 14px;
+  border-radius: 9999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  background: rgba(15, 23, 42, 0.5);
+  border: 1px solid var(--border-color);
+  color: var(--text-muted);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.admin-pill:hover {
+  color: var(--text);
+  border-color: rgba(16, 185, 129, 0.4);
+  background: rgba(16, 185, 129, 0.08);
+}
+
+.admin-pill-active {
+  background: rgba(16, 185, 129, 0.18) !important;
+  border-color: var(--green-primary) !important;
+  color: #34d399 !important;
+  box-shadow: 0 2px 8px rgba(16, 185, 129, 0.15);
+}
+
+/* Universal Page Header Block */
+.admin-header-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: flex-start;
+  flex-wrap: wrap;
+  gap: 16px;
+  margin-bottom: 24px;
+}
+
+.admin-header-title {
+  font-size: 1.75rem;
+  font-weight: 800;
+  color: var(--text);
+  margin: 0 0 4px 0;
+  letter-spacing: -0.02em;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.admin-header-subtitle {
+  font-size: 0.9rem;
+  color: var(--text-muted);
+  margin: 0;
 }
 
 /* ============================================================

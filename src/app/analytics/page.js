@@ -638,18 +638,15 @@ export default function AdminAnalyticsPage() {
       {/* CSS Styles Block (Premium Glassmorphic Design System) */}
       <style jsx global>{`
         .analytics-container {
-          background: #0b1511;
-          background: radial-gradient(circle at top right, #112d20 0%, #070d0a 70%);
-          min-height: calc(100vh - 85px);
-          padding: 12px 16px;
+          width: 100%;
+          max-width: 100%;
+          padding: 0;
+          margin: 0;
           color: #e2f0e9;
           font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
           display: flex;
           flex-direction: column;
-          gap: 0.85rem;
-          border-radius: 14px;
-          border: 1px solid rgba(46, 117, 81, 0.15);
-          box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.25);
+          gap: 1.25rem;
           --time-width: 80px;
           --connector-width: 40px;
         }
@@ -832,6 +829,21 @@ export default function AdminAnalyticsPage() {
           outline: none;
           cursor: pointer;
           color-scheme: dark;
+        }
+
+        .round-date-input::-webkit-calendar-picker-indicator {
+          cursor: pointer;
+          filter: invert(0.8) sepia(100%) hue-rotate(90deg) brightness(1.2);
+          opacity: 0.85;
+          transition: all 0.2s ease;
+          padding: 2px;
+          border-radius: 4px;
+        }
+
+        .round-date-input::-webkit-calendar-picker-indicator:hover {
+          opacity: 1;
+          background: rgba(16, 185, 129, 0.15);
+          transform: scale(1.1);
         }
 
         .round-clear-btn {

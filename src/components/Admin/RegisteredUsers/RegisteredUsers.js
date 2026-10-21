@@ -21,6 +21,14 @@ import {
   FiActivity,
 } from "react-icons/fi";
 import { FaGoogle, FaWhatsapp } from "react-icons/fa";
+import CustomDropdown from "@/components/Shared/CustomDropdown";
+
+const SORT_OPTIONS = [
+  { value: "newest", label: "Newest Registered" },
+  { value: "ltv_desc", label: "Highest Spend (LTV)" },
+  { value: "orders_desc", label: "Most Orders" },
+  { value: "name_asc", label: "Name (A-Z)" },
+];
 
 export default function RegisteredUsers() {
   const [users, setUsers] = useState([]);
@@ -267,16 +275,12 @@ export default function RegisteredUsers() {
 
         <div className={styles.sortWrapper}>
           <label className={styles.sortLabel}>Sort By:</label>
-          <select
+          <CustomDropdown
             value={sortBy}
-            onChange={(e) => setSortBy(e.target.value)}
-            className={styles.sortSelect}
-          >
-            <option value="newest">Newest Registered</option>
-            <option value="ltv_desc">Highest Spend (LTV)</option>
-            <option value="orders_desc">Most Orders</option>
-            <option value="name_asc">Name (A-Z)</option>
-          </select>
+            options={SORT_OPTIONS}
+            onChange={(val) => setSortBy(val?.target ? val.target.value : val)}
+            size="sm"
+          />
         </div>
       </div>
 

@@ -786,7 +786,7 @@ export default function AdminPortal() {
         </header>
 
         {/* Page body */}
-        <div className={`main-body ${activeTab === "sessions" ? "main-body--sessions" : ""}`}>
+        <div className="main-body">
           {tabLoading ? (
             <div className="tab-loading-wrap">
               <div className="tab-spinner" />
@@ -1134,11 +1134,11 @@ export default function AdminPortal() {
         }
         .main-body {
           flex: 1;
-          padding: 28px;
+          padding: 28px 32px;
           overflow-y: auto;
-        }
-        .main-body--sessions {
-          padding: 8px 12px;
+          width: 100%;
+          max-width: 100%;
+          box-sizing: border-box;
         }
 
         /* ══════ RESPONSIVE ══════ */
@@ -1160,13 +1160,13 @@ export default function AdminPortal() {
           /* Main takes full width */
           .main { margin-left: 0; }
           .topbar { padding: 0 16px; }
-          .main-body { padding: 20px 16px; }
+          .main-body { padding: 20px 20px; }
         }
 
         @media (max-width: 480px) {
           .topbar-subtitle { display: none; }
           .topbar-title { font-size: 0.95rem; }
-          .main-body { padding: 16px 12px; }
+          .main-body { padding: 16px 14px; }
           .sb-user-email { display: none; }
         }
 

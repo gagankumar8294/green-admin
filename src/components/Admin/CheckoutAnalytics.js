@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import styles from "./CheckoutAnalytics.module.css";
 import { API_BASE_URL } from "@/config/api";
+import { FiSearch, FiX } from "react-icons/fi";
 
 export default function CheckoutAnalytics() {
   const [checkouts, setCheckouts] = useState([]);
@@ -213,6 +214,7 @@ export default function CheckoutAnalytics() {
       {/* Controls: Search and Filters */}
       <div className={styles.controlsRow}>
         <div className={styles.searchBar}>
+          <FiSearch className={styles.searchIcon} />
           <input
             type="text"
             className={styles.searchInput}
@@ -220,6 +222,15 @@ export default function CheckoutAnalytics() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
           />
+          {search && (
+            <button
+              onClick={() => setSearch("")}
+              className={styles.clearSearchBtn}
+              title="Clear search"
+            >
+              <FiX size={14} />
+            </button>
+          )}
         </div>
 
         <div className={styles.filterGroup}>

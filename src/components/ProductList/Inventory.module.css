@@ -7,6 +7,9 @@
   flex-direction: column;
   gap: 16px;
   width: 100%;
+  max-width: 100%;
+  padding: 0;
+  margin: 0;
 }
 
 /* Main wrapper with custom horizontal scroll fallback */
